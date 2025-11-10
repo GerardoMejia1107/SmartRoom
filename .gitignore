@@ -1,6 +1,5 @@
 # Environment
-.env
-.env.*
+backend/.env
 
 # Dependencies
 node_modules/
