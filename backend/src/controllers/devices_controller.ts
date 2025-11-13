@@ -56,6 +56,21 @@ export class DeviceController {
         }
     }
 
+    static async patch(req: Request, res: Response): Promise<void> {
+        try {
+            const updatedDevice = await DeviceService.updatePartial(req.body)
+            if (!updatedDevice) {
+                res.status(404).json({error: "No such device"})
+                return
+            }
+            res.json(updatedDevice)
+
+        } catch (e) {
+            console.error("Error patching device:", e);
+            res.status(400).json({error: "Error patching device"})
+        }
+    }
+
     static async delete(req: Request, res: Response): Promise<void> {
         try {
             const deletedDevice = await DeviceService.delete(req.params.id)
