@@ -10,6 +10,7 @@ export class AccessLogsService {
     }
 
     static create(data: Partial<IAccessLog>): Promise<IAccessLog> {
+        data.door_action = data.authorized ? 'open' : 'deny';
         const accessLog = new AccessLog(data);
         return accessLog.save();
     }
