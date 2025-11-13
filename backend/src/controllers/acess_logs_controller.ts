@@ -29,7 +29,7 @@ export class AcessLogsController {
 
     static async create(req: Request, res: Response): Promise<void> {
         try {
-            const newLog = await AccessLog.create(req.body)
+            const newLog = await AccessLogsService.create(req.body)
             if (!newLog) {
                 res.status(400).json({error: "Error creating access log"});
                 return
