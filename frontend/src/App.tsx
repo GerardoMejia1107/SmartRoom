@@ -2,6 +2,7 @@ import './App.css'
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import Layout from "./layouts/Layout.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
+import Events from "./pages/Events.tsx";
 
 
 function App() {
@@ -15,7 +16,7 @@ function App() {
                     <Route index element={<Dashboard/>}/>
                     <Route path={"controls"} element={<div>Controles</div>}/>
                     <Route path={"access"} element={<div>Accesos</div>}/>
-                    <Route path={"events"} element={<div>Eventos</div>}/>
+                    <Route path={"events"} element={<Events/>}/>
                 </Route>
             </Routes>
 
