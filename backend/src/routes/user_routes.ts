@@ -1,10 +1,12 @@
-import {Router} from "express";
-import {UserController} from "../controllers/user_controller";
+import { Router } from "express";
+import { UserController } from "../controllers/user_controller";
 
 const router = Router();
 
 // GET all users
 router.get("/", UserController.getAll);
+
+router.get("/allowed", UserController.getAllRFIDs);
 
 // GET user by ID
 router.get("/:id", UserController.getById);

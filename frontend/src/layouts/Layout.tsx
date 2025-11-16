@@ -35,8 +35,8 @@ export default function Layout() {
         <div className="min-h-screen w-full bg-[#13171c] text-white flex flex-col">
 
             {/* HEADER */}
-            <header className="w-full bg-[#1f2530] px-8 py-4 shadow-lg border-b border-[#2b3340]">
-                <div className="flex items-center justify-between">
+            <header className="fixed top-0 left-0 z-50 w-full bg-[#1f2530] px-8 py-4 shadow-lg border-b border-[#2b3340]">
+                <div className=" flex items-center justify-between">
 
                     {/* LEFT */}
                     <div className="flex items-center gap-4">
@@ -84,7 +84,7 @@ export default function Layout() {
             </header>
 
             {/* CONTENT */}
-            <main className="flex-1 w-full min-h-screen bg-[#181d23] p-6">
+            <main className="flex-1 w-full min-h-screen bg-[#181d23] pt-16 px-8 mt-20">
                 <Outlet/>
             </main>
         </div>
