@@ -1,6 +1,7 @@
 import app from './app';
 import config from './config/config';
 import mongoose from "mongoose";
+import mqtt_client from "./mqtt/mqtt_client";
 
 mongoose.connect(config.mongoUri).then(() => {
     console.log('Connected to MongoDB');

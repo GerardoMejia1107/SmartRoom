@@ -9,6 +9,10 @@ export class UserService {
         return User.findById(id)
     }
 
+    static async getAllActiveUIDs(): Promise<String[]>{
+        return  await User.find({active: true}).select("rfid_uid -_id").then(users => users.map(u => u.rfid_uid));
+    }
+
     static create(data: Partial<IUser>): Promise<IUser> | null {
         const user = new User(data)
         return user.save();

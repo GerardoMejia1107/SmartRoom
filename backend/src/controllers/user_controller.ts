@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { UserService } from "../services/user_service";
 import { User } from "../models/user_model";
+import mqtt_client from "../mqtt/mqtt_client";
+import { json } from "stream/consumers";
 
 export class UserController {
   static async getAll(req: Request, res: Response): Promise<void> {
@@ -42,6 +44,13 @@ export class UserController {
   static async create(req: Request, res: Response): Promise<void> {
     try {
       const newUser = await UserService.create(req.body);
+
+      let users = await User.find({ active: true }).select("rfid_uid -_id");
+      let allowed = users.map((u) => u.rfid_uid);
+
+      mqtt_client.publish("rfid/allowed/update", JSON.stringify(allowed), {retain: true});
+      console.log("[MQTT] Publicando allowed:", allowed);
+
       res.status(201).json(newUser);
     } catch (error) {
       console.error("Error creating user:", error);

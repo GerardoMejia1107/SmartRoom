@@ -3,15 +3,20 @@ import type {User} from "../types/User.ts";
 
 
 export function usePostUser() {
-    return useFetch<User>({
-        url: "http://localhost:3000/api/users",
-        method: "POST"
-    })
+    return useFetch<User>(
+        "http://localhost:3000/api/users",
+        "POST"
+    )
 }
 
 export function useGetUsers() {
-    return useFetch<User[]>({
-        url: "http://localhost:3000/api/users",
-        method: "GET"
-    })
+    return useFetch<User[]>("http://localhost:3000/api/users", "GET"
+    )
+}
+
+export function useDeleteUser() {
+    return useFetch<null>(
+        `http://localhost:3000/api/users`,
+        "DELETE"
+    )
 }

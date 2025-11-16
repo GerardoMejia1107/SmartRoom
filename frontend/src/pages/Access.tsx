@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 import * as React from "react";
-import {useGetUsers, usePostUser} from "../api/usersApi.ts";
+import {useDeleteUser, useGetUsers, usePostUser} from "../api/usersApi.ts";
 
 function Access() {
     const [modal, setModal] = useState(false); // Placeholder for modal state management
@@ -14,6 +14,8 @@ function Access() {
 
     const {commonFetch} = usePostUser()
     const {isLoading: isLoadingGetUsers, commonFetch: commonFetchGetUsers, data: users} = useGetUsers()
+    const {commonFetch: commonFetchDeleteUser} = useDeleteUser()
+
 
     useEffect(() => {
 
@@ -35,6 +37,13 @@ function Access() {
         setModal(false)
         cleanFields()
 
+    }
+
+    function deleteUser(user_id: string) {
+
+        commonFetchDeleteUser({
+            urlParams: `/${user_id}`
+        })
     }
 
     function cleanFields() {
@@ -95,11 +104,18 @@ function Access() {
 
                                 <td className="p-4 text-right flex gap-3 justify-end">
 
-                                    <button className="text-blue-400 hover:text-blue-300" id="editUserBtn">
+                                    <button className="text-blue-400 hover:text-blue-300" id="editUserBtn"
+                                            onClick={() => {
+                                                alert("Funcionalidad de editar no implementada.")
+                                            }}>
                                         Editar
                                     </button>
 
-                                    <button className="text-red-400 hover:text-red-300" id="deleteUserBtn">
+                                    <button className="text-red-400 hover:text-red-300" id="deleteUserBtn"
+                                            onClick={() => {
+                                                // @ts-ignore
+                                                deleteUser(user?._id)
+                                            }}>
                                         Eliminar
                                     </button>
 
