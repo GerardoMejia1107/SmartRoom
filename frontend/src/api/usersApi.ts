@@ -20,3 +20,10 @@ export function useDeleteUser() {
         "DELETE"
     )
 }
+
+export function usePutUser() {
+    return useFetch<User>(
+        `http://localhost:3000/api/users`,
+        "PUT"
+    )
+}

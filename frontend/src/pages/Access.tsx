@@ -1,9 +1,11 @@
 import {useEffect, useState} from "react";
 import * as React from "react";
-import {useDeleteUser, useGetUsers, usePostUser} from "../api/usersApi.ts";
+import {useDeleteUser, useGetUsers, usePostUser, usePutUser} from "../api/usersApi.ts";
 
 function Access() {
     const [modal, setModal] = useState(false); // Placeholder for modal state management
+    const [httpMode, setHttpMode] = useState<"POST" | "PUT">("POST");
+    const [currentEditId, setCurrentEditId] = useState<string | null>(null);
 
     //Form fields states
     const [name, setName] = useState("");
@@ -12,38 +14,79 @@ function Access() {
     const [role, setRole] = useState("user");
     const [status, setStatus] = useState(true);
 
-    const {commonFetch} = usePostUser()
-    const {isLoading: isLoadingGetUsers, commonFetch: commonFetchGetUsers, data: users} = useGetUsers()
-    const {commonFetch: commonFetchDeleteUser} = useDeleteUser()
+    const {isLoading: isLoadingGetUsers, commonFetch: getStoredUsers, data: users} = useGetUsers()
+    const {commonFetch: postNewUser} = usePostUser()
+    const {commonFetch: deleteStoredUser} = useDeleteUser()
+    const {commonFetch: updateStoredUser} = usePutUser()
 
 
     useEffect(() => {
-
-        commonFetchGetUsers({});
+        getStoredUsers({}).then((success) => {
+            console.log("Users fetched:", success)
+        })
     }, []);
 
 
-    function handleSubmit(e: React.FormEvent) {
+    async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
-        commonFetch({
-            input: {
-                name: name,
-                email: email,
-                rfid_uid: rfid,
-                role: role,
-                active: status
-            }
-        })
+
+        if (httpMode === "POST") {
+            await postNewUser({
+                input: {
+                    name: name,
+                    email: email,
+                    rfid_uid: rfid,
+                    role: role,
+                    active: status
+                }
+            })
+        }
+
+        if (httpMode === "PUT") {
+            await updateStoredUser({
+                input: {
+                    name: name,
+                    email: email,
+                    rfid_uid: rfid,
+                    role: role,
+                    active: status
+                },
+                urlParams: `/${currentEditId}`
+            })
+        }
+
+        await getStoredUsers({})
+
         setModal(false)
         cleanFields()
+    }
+
+    function handleEdit(user_id: string) {
+        // @ts-ignore
+        const userToEdit = users?.find(user => user._id === user_id);
+        if (!userToEdit) {
+            return
+        }
+        setHttpMode("PUT");
+        setCurrentEditId(user_id);
+        // Pre-fill form fields with user data
+
+        setName(userToEdit.name);
+        setEmail(userToEdit.email);
+        setRfid(userToEdit.rfid_uid);
+        setRole(userToEdit.role);
+        setStatus(userToEdit.active);
+        setModal(true);
 
     }
 
-    function deleteUser(user_id: string) {
+    async function deleteUser(user_id: string) {
 
-        commonFetchDeleteUser({
+        await deleteStoredUser({
             urlParams: `/${user_id}`
         })
+
+        await getStoredUsers({})
     }
 
     function cleanFields() {
@@ -64,7 +107,10 @@ function Access() {
                 <button
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
                     id="openCreateModal"
-                    onClick={() => setModal(true)}
+                    onClick={() => {
+                        setModal(true)
+                        setHttpMode("POST")
+                    }}
                 >
                     + Nuevo Usuario
                 </button>
@@ -106,15 +152,16 @@ function Access() {
 
                                     <button className="text-blue-400 hover:text-blue-300" id="editUserBtn"
                                             onClick={() => {
-                                                alert("Funcionalidad de editar no implementada.")
+                                                // @ts-ignore
+                                                handleEdit(user?._id)
                                             }}>
                                         Editar
                                     </button>
 
                                     <button className="text-red-400 hover:text-red-300" id="deleteUserBtn"
-                                            onClick={() => {
+                                            onClick={async () => {
                                                 // @ts-ignore
-                                                deleteUser(user?._id)
+                                                await deleteUser(user?._id)
                                             }}>
                                         Eliminar
                                     </button>
