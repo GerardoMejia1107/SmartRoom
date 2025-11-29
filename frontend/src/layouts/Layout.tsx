@@ -1,7 +1,7 @@
 import {Link, Outlet, useLocation} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {
-    Thermometer, Lightbulb, DoorOpen, AlertTriangle, SunSnow, GamepadIcon
+    Thermometer, Lightbulb, DoorOpen, AlertTriangle, SunSnow
 } from "lucide-react";
 
 export default function Layout() {
@@ -26,7 +26,6 @@ export default function Layout() {
 
     const navItems = [
         {name: "Dashboards", icon: <Thermometer size={16}/>, path: "/"},
-        {name: "Controles", icon: <GamepadIcon size={16}/>, path: "/controls"},
         {name: "Accesos", icon: <DoorOpen size={16}/>, path: "/access"},
         {name: "Eventos", icon: <AlertTriangle size={16}/>, path: "/events"}
     ]
@@ -84,7 +83,7 @@ export default function Layout() {
             </header>
 
             {/* CONTENT */}
-            <main className="flex-1 w-full min-h-screen bg-[#181d23] pt-16 px-8 mt-20">
+            <main className="flex-1 w-full min-h-screen bg-[#181d23] pt-16 px-8 mt-10">
                 <Outlet/>
             </main>
         </div>

@@ -6,12 +6,13 @@
 
 const char *WIFI_SSID = "CLARO1_1B20F6";
 const char *WIFI_PASS = "492BCORuFG";
+
 const char *URI_BACKEND = "http://192.168.1.44:3000/api/sensors";
 
 HTTPClient http;
 WiFiClient client;
 
-const unsigned POST_INTERVAL_RATE = 5000;
+const unsigned POST_INTERVAL_RATE = 10000;
 static unsigned PREVIOUS_MILLIS = 0;
 
 // ========= Pines =========
@@ -35,15 +36,14 @@ const int WIN_CLOSED = 0;
 const int WIN_OPEN = 180;
 
 // ========= ADC / LDR en Volts =========
-// VREF externo visto en A0. En la mayoría de NodeMCU/Wemos ~3.3 V.
-// Ajusta si tu placa reporta distinto (p. ej. 3.20).
 const float ADC_VREF = 3.30;
 
 // Umbrales con histéresis EN VOLTS para evitar parpadeos
-// Se ENCIENDE si V < LDR_ON_V  (poca luz)
-// Se APAGA   si V > LDR_OFF_V (mucha luz)
-float LDR_ON_V = 1.80;  // ajústalo según lecturas reales
-float LDR_OFF_V = 2.20; // debe ser > LDR_ON_V
+float LDR_ON_V = 1.80;
+float LDR_OFF_V = 2.20;
+
+double LDR_ON_PERCENTAGE = 25.0;
+double LDR_OFF_PERCENTAGE = 70.0;
 
 // ========= Timers =========
 const unsigned long DHT_MS = 2000;
@@ -51,6 +51,13 @@ const unsigned long PIR_MS = 500;
 const unsigned long LDR_PRINT_MS = 2000;
 
 unsigned long lastDht = 0, lastPir = 0, lastLdrPrint = 0;
+
+// ========= Variables PIR mejoradas =========
+bool pirState = false;
+bool lastPirState = false;
+unsigned long pirLastDetection = 0;
+const unsigned long PIR_DEBOUNCE_MS = 2000; // Tiempo de debounce para PIR
+const unsigned long PIR_COOLDOWN_MS = 5000; // Tiempo mínimo entre detecciones
 
 enum WState
 {
@@ -77,6 +84,8 @@ void setWindow(WState s)
     Serial.println(F("[VENTANA] CERRADA"));
   }
 }
+
+void POST_data(String URL, String payload);
 
 void setup()
 {
@@ -106,8 +115,17 @@ void setup()
   digitalWrite(LED_LUZ, LOW); // apagado inicial
   ledLuzEncendido = false;
 
-  // PIR
-  pinMode(PIR_PIN, INPUT); // si tu PIR flota, usa INPUT_PULLUP y ajusta la lógica
+  // PIR - Configuración mejorada
+  pinMode(PIR_PIN, INPUT);
+
+  // Espera inicial para que el PIR se estabilice (30-60 segundos recomendados)
+  Serial.println(F("[PIR] Inicializando sensor (espera 30 segundos...)"));
+  for (int i = 0; i < 30; i++)
+  {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println(F("\n[PIR] Sensor listo"));
 }
 
 void loop()
@@ -143,70 +161,111 @@ void loop()
   }
 
   // ---- LDR continuo: LED por poca luz + mensajes y voltaje ----
-  int ldrRaw = analogRead(LDR_PIN);           // 0..1023
-  float ldrV = (ldrRaw * ADC_VREF) / 1023.0f; // conversión a volts
+  int ldrRaw = analogRead(LDR_PIN);
+  float ldrPct = 100.0f - ((ldrRaw / 1023.0f) * 100.0f);
 
-  // Histéresis en VOLTS: cambio solo al cruzar umbrales opuestos
-  if (!ledLuzEncendido && ldrV < LDR_ON_V)
+  // ----- LIGHT LOGIC WITH HYSTERESIS -----
+  if (!ledLuzEncendido && ldrPct < 30.0f)
   {
     ledLuzEncendido = true;
-    digitalWrite(LED_LUZ, LOW); // LED ON (externo típico activo en HIGH)
-    // Serial.print(F("[LDR] Poca luz -> LED ENCENDIDO | raw="));
-    Serial.print(F("[LDR] Mucha luz -> LED APAGADO | raw="));
-    Serial.print(ldrRaw);
-    Serial.print(F(" | V="));
-    Serial.print(ldrV, 2);
-    Serial.println(F(" V"));
+    digitalWrite(LED_LUZ, HIGH);
+
+    Serial.println("──────────  LDR EVENT  ──────────");
+    Serial.printf("  RAW: %d\n", ldrRaw);
+    Serial.printf("  LIGHT: %.1f %%\n", ldrPct);
+    Serial.println("  → LOW LIGHT DETECTED → LED ON");
+    Serial.println("──────────────────────────────────");
   }
-  else if (ledLuzEncendido && ldrV > LDR_OFF_V)
+  else if (ledLuzEncendido && ldrPct > 70.0f)
   {
     ledLuzEncendido = false;
-    digitalWrite(LED_LUZ, HIGH); // LED OFF
-    // Serial.print(F("[LDR] Mucha luz -> LED APAGADO | raw="));
-    Serial.print(F("[LDR] Poca luz -> LED ENCENDIDO | raw="));
-    Serial.print(ldrRaw);
-    Serial.print(F(" | V="));
-    Serial.print(ldrV, 2);
-    Serial.println(F(" V"));
+    digitalWrite(LED_LUZ, LOW);
+
+    Serial.println("──────────  LDR EVENT  ──────────");
+    Serial.printf("  RAW: %d\n", ldrRaw);
+    Serial.printf("  LIGHT: %.1f %%\n", ldrPct);
+    Serial.println("  → HIGH LIGHT DETECTED → LED OFF");
+    Serial.println("──────────────────────────────────");
   }
 
-  // Imprime cada 2 s para calibrar (raw + volts + estado LED)
+  // ----- PERIODIC STATUS PRINT EVERY 2s -----
   if (now - lastLdrPrint >= LDR_PRINT_MS)
   {
     lastLdrPrint = now;
-    Serial.print(F("[LDR] raw="));
-    Serial.print(ldrRaw);
-    Serial.print(F(" | V="));
-    Serial.print(ldrV, 2);
-    Serial.print(F(" V | LED="));
-    // Serial.println(ledLuzEncendido ? F("ENCENDIDO") : F("APAGADO"));
-    Serial.println(ledLuzEncendido ? F("APAGADO") : F("ENCENDIDO"));
+
+    Serial.println("──────────  LDR STATUS  ──────────");
+    Serial.printf("  RAW: %d\n", ldrRaw);
+    Serial.printf("  LIGHT: %.1f %%\n", ldrPct);
+    Serial.printf("  LED: %s\n", ledLuzEncendido ? "ON" : "OFF");
+    Serial.println("──────────────────────────────────");
   }
 
-  // ---- PIR cada 0.5 s: solo mensajes ----
+  // ---- PIR MEJORADO: con debounce y cooldown ----
   if (now - lastPir >= PIR_MS)
   {
     lastPir = now;
-    int pir = digitalRead(PIR_PIN);
-    Serial.println(pir ? F("[PIR] Movimiento") : F("[PIR] Sin movimiento"));
+
+    int pirReading = digitalRead(PIR_PIN);
+
+    // Solo procesar si ha pasado el tiempo de cooldown
+    if (now - pirLastDetection >= PIR_COOLDOWN_MS)
+    {
+      // Detección con debounce
+      if (pirReading == HIGH && !pirState)
+      {
+        unsigned long detectionTime = now;
+
+        // Verificar que la detección sea consistente por un tiempo
+        bool consistentDetection = true;
+        for (int i = 0; i < 3; i++)
+        {
+          delay(50);
+          if (digitalRead(PIR_PIN) == LOW)
+          {
+            consistentDetection = false;
+            break;
+          }
+        }
+
+        if (consistentDetection)
+        {
+          pirState = true;
+          pirLastDetection = detectionTime;
+          Serial.println(F("[PIR] ★ MOVIMIENTO DETECTADO ★"));
+        }
+      }
+    }
+
+    // Resetear estado cuando no hay lectura
+    if (pirReading == LOW && pirState && (now - pirLastDetection >= PIR_DEBOUNCE_MS))
+    {
+      pirState = false;
+      Serial.println(F("[PIR] Sin movimiento"));
+    }
+
+    // Solo imprimir cuando cambia el estado
+    if (pirState != lastPirState)
+    {
+      lastPirState = pirState;
+    }
   }
 
+  // ---- ENVÍO DE DATOS AL BACKEND ----
   unsigned long CURRENT_MILLIS = millis();
   if (CURRENT_MILLIS - PREVIOUS_MILLIS > POST_INTERVAL_RATE)
   {
     PREVIOUS_MILLIS = CURRENT_MILLIS;
-    // valores actuales
+
     float t = dht.readTemperature();
     float h = dht.readHumidity();
-    int ldrRaw = analogRead(LDR_PIN);
-    bool motion = digitalRead(PIR_PIN);
+    int ldr_pct = 100.0f - ((ldrRaw / 1023.0f) * 100.0f);;
 
     String payload = "{";
     payload += "\"temperature_c\":" + String(t, 1) + ",";
     payload += "\"humidity_pct\":" + String(h, 1) + ",";
-    payload += "\"light_adc\":" + String(ldrRaw) + ",";
+    payload += "\"light_pct\":" + String(ldr_pct) + ",";
     payload += "\"low_light\":" + String(ledLuzEncendido ? "true" : "false") + ",";
-    payload += "\"motion\":" + String(motion ? "true" : "false") + ",";
+    payload += "\"motion\":" + String(pirState ? "true" : "false") + ",";
     payload += "\"source\":\"esp32-B\"";
     payload += "}";
 

@@ -4,9 +4,14 @@ import type {Logs} from "../types/Logs.ts";
 
 export function useGetLogs() {
     return useFetch<Logs[]>(
+        "http://localhost:3000/api/logs",
+        "GET"
+    )
+}
 
-            "http://localhost:3000/api/logs",
-            "GET"
-
+export function useDeleteLog() {
+    return useFetch(
+        `http://localhost:3000/api/logs`,
+        "DELETE",
     )
 }

@@ -190,6 +190,7 @@ function Access() {
 
                         <button className="text-gray-400 hover:text-gray-200" id="closeCreateModal" onClick={() => {
                             setModal(false)
+                            cleanFields()
                         }}>
                             ✕
                         </button>
