@@ -3,71 +3,50 @@ import {
     LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend
 } from "recharts";
 import ControlPanel from "../components/ControlPanel.tsx";
+import {useGetSensors} from "../api/sensorsApi.ts";
+import {useEffect} from "react";
 
 function Dashboard() {
+    const {commonFetch: getStoredSensorsData, data: sensorsData} = useGetSensors()
+
+    // @ts-ignore
+    const lastRow = sensorsData?.[sensorsData.length - 1];
+
+    useEffect(() => {
+        getStoredSensorsData({}).then(response => {
+            console.log("Stored sensors data:", response);
+        });
+
+        let interval = setInterval(() => {
+            getStoredSensorsData({}).then(response => {
+                console.log("Stored sensors data:", response);
+            })
+        }, 5000)
+
+        return () => clearInterval(interval);
+
+    }, []);
 
     const sensors = [
-        {icon: <Thermometer size={36}/>, label: "Temperature", value: 15, unit: "°C"},
-        {icon: <LucideDroplets size={36}/>, label: "Humidity", value: 15, unit: "%"},
-        {icon: <Sun size={36}/>, label: "Light", value: 15, unit: "%"}
+        {icon: <Thermometer size={36}/>, label: "Temperature", value: lastRow?.temperature_c, unit: "°C"},
+        {icon: <LucideDroplets size={36}/>, label: "Humidity", value: lastRow?.humidity_pct, unit: "%"},
+        {icon: <Sun size={36}/>, label: "Light", value: lastRow?.light_pct, unit: "%"}
     ];
 
-    const data = [{time: "10:00", temp: 24, humidity: 40, light: 60}, {
-        time: "10:01",
-        temp: 25,
-        humidity: 42,
-        light: 65
-    }, {time: "10:00", temp: 24, humidity: 40, light: 60}, {
-        time: "10:01",
-        temp: 25,
-        humidity: 42,
-        light: 65
-    }, {time: "10:00", temp: 24, humidity: 40, light: 60}, {
-        time: "10:01",
-        temp: 25,
-        humidity: 42,
-        light: 65
-    }, {time: "10:00", temp: 24, humidity: 40, light: 60}, {
-        time: "10:01",
-        temp: 25,
-        humidity: 42,
-        light: 65
-    }, {time: "10:00", temp: 24, humidity: 40, light: 60}, {
-        time: "10:01",
-        temp: 25,
-        humidity: 42,
-        light: 65
-    }, {time: "10:00", temp: 24, humidity: 40, light: 60}, {
-        time: "10:01",
-        temp: 25,
-        humidity: 42,
-        light: 65
-    }, {time: "10:00", temp: 24, humidity: 40, light: 60}, {
-        time: "10:01",
-        temp: 25,
-        humidity: 42,
-        light: 65
-    }, {time: "10:00", temp: 24, humidity: 40, light: 60}, {
-        time: "10:01",
-        temp: 25,
-        humidity: 42,
-        light: 65
-    }, {time: "10:00", temp: 24, humidity: 40, light: 60}, {
-        time: "10:01",
-        temp: 25,
-        humidity: 42,
-        light: 65
-    }, {time: "10:00", temp: 24, humidity: 40, light: 60}, {
-        time: "10:01",
-        temp: 25,
-        humidity: 42,
-        light: 65
-    }, {time: "10:00", temp: 24, humidity: 40, light: 60}, {
-        time: "10:01",
-        temp: 25,
-        humidity: 42,
-        light: 65
-    }, {time: "10:01", temp: 25, humidity: 42, light: 90}, {time: "10:01", temp: 25, humidity: 42, light: 10},]
+    // @ts-ignore
+    const formattedChartData = sensorsData?.map(item => {
+        const date = new Date(item.timestamp)
+        const time = date.toLocaleTimeString("es-SV", {
+            hour: "numeric", minute: "numeric", second: "numeric"
+        });
+
+        return {
+            time: time,
+            temp: String(item.temperature_c),
+            humidity: String(item.humidity_pct),
+            light: String(item.light_pct)
+        }
+    }) ?? [];
 
     return (
         <div className="w-full px-4 py-3 flex flex-col gap-1">
@@ -110,7 +89,7 @@ function Dashboard() {
 
                     <h2 className="text-lg font-semibold mb-2">Sensor Monitoring</h2>
 
-                    <LineChart width={900} height={350} data={data}>
+                    <LineChart width={900} height={350} data={formattedChartData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#2a323e"/>
                         <XAxis dataKey="time" stroke="#ccc"/>
                         <YAxis stroke="#ccc"/>

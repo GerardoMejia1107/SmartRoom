@@ -28,8 +28,8 @@ const uint8_t LED_LUZ = D6; // LED para luz (poca luz => ON)
 const uint8_t PIR_PIN = D1; // salida del PIR
 
 // ========= Reglas de temperatura (tus valores) =========
-const float T_CLOSE = 26.9; // ≤28 -> cerrar
-const float T_OPEN = 27.0;  // ≥29 -> abrir
+const float T_CLOSE = 20.5; // ≤28 -> cerrar
+const float T_OPEN = 23.0;  // ≥29 -> abrir
 
 // Posiciones del servo (ajusta a tu montaje)
 const int WIN_CLOSED = 0;
@@ -258,7 +258,8 @@ void loop()
 
     float t = dht.readTemperature();
     float h = dht.readHumidity();
-    int ldr_pct = 100.0f - ((ldrRaw / 1023.0f) * 100.0f);;
+    int ldr_pct = 100.0f - ((ldrRaw / 1023.0f) * 100.0f);
+    ;
 
     String payload = "{";
     payload += "\"temperature_c\":" + String(t, 1) + ",";

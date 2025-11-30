@@ -1,22 +1,35 @@
 import {DoorClosed, DoorOpen, TrashIcon, AlertTriangle} from "lucide-react";
 import {useEffect} from "react";
 
-import {useGetLogs} from "../api/logsApi.ts";
-import {useGetAlerts} from "../api/alertsApi.ts";
+import {useDeleteLog, useGetLogs} from "../api/logsApi.ts";
+import {useDeleteAlert, useGetAlerts} from "../api/alertsApi.ts";
 
 function Events() {
     const {isLoading, commonFetch, data: logs} = useGetLogs();
     const {isLoading: isLoadingAlerts, commonFetch: commonFetchAlerts, data: alerts} = useGetAlerts()
 
-    const{commonFetch: deleteStoredLogs} = useGetLogs();
-    const{commonFetch: deleteStoredAlerts} = useGetAlerts();
+    const {commonFetch: deleteStoredLogs} = useDeleteLog()
 
+    const {commonFetch: deleteStoredAlerts} = useDeleteAlert();
+
+    async function deleteLog(uid: string) {
+        await deleteStoredLogs({urlParams: `/${uid}`});
+
+        await commonFetch({});
+    }
+
+    async function deleteAlert(uid: string) {
+        await deleteStoredAlerts({urlParams: `/${uid}`});
+
+        await commonFetchAlerts({});
+    }
 
 
     useEffect(() => {
         commonFetch({});
         commonFetchAlerts({});
     }, []);
+
 
     return (
         <div className="w-full max-w-4xl mx-auto flex flex-col gap-6 pb-10">
@@ -78,7 +91,10 @@ function Events() {
                                 </div>
 
                                 {/* DELETE */}
-                                <button className="text-gray-400 hover:text-red-400 transition">
+                                <button className="text-gray-400 hover:text-red-400 transition" onClick={async () => {
+                                    // @ts-ignore
+                                    await deleteLog(log?._id)
+                                }}>
                                     <TrashIcon size={20}/>
                                 </button>
                             </div>
@@ -135,7 +151,10 @@ function Events() {
                                 </div>
 
                                 {/* DELETE */}
-                                <button className="text-gray-400 hover:text-red-400 transition">
+                                <button className="text-gray-400 hover:text-red-400 transition" onClick={async () => {
+                                    // @ts-ignore
+                                    await deleteAlert(alert?._id)
+                                }}>
                                     <TrashIcon size={20}/>
                                 </button>
                             </div>
