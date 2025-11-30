@@ -1,31 +1,74 @@
 import {Device, IDevice} from "../models/device_model";
 
+
+type WindowsState = 'open' | 'closed';
+type DoorState = 'open' | 'closed' | 'locked';
+
 export class DeviceService {
-    static getAll(): Promise<IDevice[]> {
-        return Device.find();
+
+
+    static async getOrCreateControllerDevice(): Promise<IDevice> {
+        let device = await Device.findOne()
+        if (!device) {
+            device = await Device.create({})
+        }
+        return device
     }
 
-    static getById(id: string): Promise<IDevice | null> {
-        return Device.findById(id)
+    static async getControllerDevice(): Promise<IDevice | null> {
+        return Device.findOne()
     }
 
-    static create(data: Partial<IDevice>): Promise<IDevice> {
-        const device = new Device(data);
-        return device.save();
+    static async updateManualcontrol(available: boolean): Promise<IDevice | null> {
+        return Device.findOneAndUpdate(
+            {},
+            {
+                $set: {
+                    available,
+                    updatedAt: new Date()
+                }
+            },
+            {new: true, upsert: true}
+        );
     }
 
-    static update(id: string, data: Partial<IDevice>): Promise<IDevice | null> {
-        return Device.findByIdAndUpdate(id, data, {new: true});
+
+    //PARA PUERTA
+    static async updateDoor(params: { state: DoorState }): Promise<IDevice | null> {
+        const updates: any = {
+            "door.state": params.state,
+            "door.last_changed": new Date(),
+            updatedAt: new Date()
+        }
+
+        return Device.findOneAndUpdate(
+            {}, {$set: updates}, {new: true, upsert: true}
+        );
     }
 
-    static async updatePartial(data: Partial<IDevice>): Promise<IDevice | null> {
-        const updated = await Device.findOneAndUpdate(
-            {}, {$set: data, $currentDate: {updatedAt: true}}, {new: true, upsert: true}
+    //PARA VENTANA
+    static async updateWindow(params: { state: WindowsState }): Promise<IDevice | null> {
+        const updates: any = {
+            "window.state": params.state,
+            "window.last_changed": new Date(),
+            updatedAt: new Date()
+        }
+        return Device.findOneAndUpdate(
+            {}, {$set: updates}, {new: true, upsert: true}
         )
-        return updated;
     }
 
-    static delete(id: string): Promise<IDevice | null> {
-        return Device.findByIdAndDelete(id);
+    //PARA LUCES
+    static async updateLights(params: { on: boolean }): Promise<IDevice | null> {
+        const updates: any = {
+            "lights.on": params.on,
+            "lights.last_changed": new Date(),
+            updatedAt: new Date()
+        }
+        return Device.findOneAndUpdate(
+            {}, {$set: updates}, {new: true, upsert: true}
+        )
     }
+
+
 }

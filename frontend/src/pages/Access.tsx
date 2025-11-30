@@ -1,9 +1,9 @@
-import {useEffect, useState} from "react";
+import {useEffect, useState, useCallback, useMemo} from "react";
 import * as React from "react";
 import {useDeleteUser, useGetUsers, usePostUser, usePutUser} from "../api/usersApi.ts";
 
 function Access() {
-    const [modal, setModal] = useState(false); // Placeholder for modal state management
+    const [modal, setModal] = useState(false);
     const [httpMode, setHttpMode] = useState<"POST" | "PUT">("POST");
     const [currentEditId, setCurrentEditId] = useState<string | null>(null);
 
@@ -26,8 +26,16 @@ function Access() {
         })
     }, []);
 
+    // Función para limpiar campos - memoizada
+    const cleanFields = useCallback(() => {
+        setName("");
+        setEmail("");
+        setRfid("");
+        setRole("user");
+        setStatus(true);
+    }, []);
 
-    async function handleSubmit(e: React.FormEvent) {
+    const handleSubmit = useCallback(async (e: React.FormEvent) => {
         e.preventDefault();
 
         if (httpMode === "POST") {
@@ -59,9 +67,9 @@ function Access() {
 
         setModal(false)
         cleanFields()
-    }
+    }, [httpMode, name, email, rfid, role, status, currentEditId, postNewUser, updateStoredUser, getStoredUsers, cleanFields]);
 
-    function handleEdit(user_id: string) {
+    const handleEdit = useCallback((user_id: string) => {
         // @ts-ignore
         const userToEdit = users?.find(user => user._id === user_id);
         if (!userToEdit) {
@@ -69,33 +77,33 @@ function Access() {
         }
         setHttpMode("PUT");
         setCurrentEditId(user_id);
-        // Pre-fill form fields with user data
-
+        
         setName(userToEdit.name);
         setEmail(userToEdit.email);
         setRfid(userToEdit.rfid_uid);
         setRole(userToEdit.role);
         setStatus(userToEdit.active);
         setModal(true);
+    }, [users]);
 
-    }
-
-    async function deleteUser(user_id: string) {
-
+    const deleteUser = useCallback(async (user_id: string) => {
         await deleteStoredUser({
             urlParams: `/${user_id}`
         })
 
         await getStoredUsers({})
-    }
+    }, [deleteStoredUser, getStoredUsers]);
 
-    function cleanFields() {
-        setName("");
-        setEmail("");
-        setRfid("");
-        setRole("user");
-        setStatus(true);
-    }
+    const handleOpenModal = useCallback(() => {
+        setModal(true);
+        setHttpMode("POST");
+        cleanFields();
+    }, [cleanFields]);
+
+    const handleCloseModal = useCallback(() => {
+        setModal(false);
+        cleanFields();
+    }, [cleanFields]);
 
     return (
         <div className="w-full max-w-5xl mx-auto px-4">
@@ -107,10 +115,7 @@ function Access() {
                 <button
                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow"
                     id="openCreateModal"
-                    onClick={() => {
-                        setModal(true)
-                        setHttpMode("POST")
-                    }}
+                    onClick={handleOpenModal}
                 >
                     + Nuevo Usuario
                 </button>
@@ -131,46 +136,45 @@ function Access() {
                     </thead>
 
                     <tbody className="text-white">
-
-                    {/* USER ROW (REPEAT THIS) */}
-                    {isLoadingGetUsers ? (<p>Loading...</p>) : (
-                        users?.map((user, i) => (
-                            <tr className="border-t border-[#2a3240]" key={i}>
+                    {isLoadingGetUsers ? (
+                        <tr>
+                            <td colSpan={6} className="p-4 text-center">Loading...</td>
+                        </tr>
+                    ) : (
+                        users?.map((user) => (
+                            <tr className="border-t border-[#2a3240]" key={user._id}>
                                 <td className="p-4">{user.name}</td>
                                 <td className="p-4">{user.email}</td>
                                 <td className="p-4">{user.rfid_uid}</td>
                                 <td className="p-4">{user.role}</td>
 
                                 <td className="p-4">
-            <span
-                className={`px-2 py-1 text-sm rounded ${user.active ? "bg-green-600 text-green-100" : "bg-red-600 text-red-100"}`}>
-                {user.active ? "Activo" : "Desactivado"}
-            </span>
+                                    <span
+                                        className={`px-2 py-1 text-sm rounded ${user.active ? "bg-green-600 text-green-100" : "bg-red-600 text-red-100"}`}>
+                                        {user.active ? "Activo" : "Desactivado"}
+                                    </span>
                                 </td>
 
                                 <td className="p-4 text-right flex gap-3 justify-end">
-
-                                    <button className="text-blue-400 hover:text-blue-300" id="editUserBtn"
-                                            onClick={() => {
-                                                // @ts-ignore
-                                                handleEdit(user?._id)
-                                            }}>
+                                    <button 
+                                        className="text-blue-400 hover:text-blue-300" 
+                                        id="editUserBtn"
+                                        onClick={() => handleEdit(user._id)}
+                                    >
                                         Editar
                                     </button>
 
-                                    <button className="text-red-400 hover:text-red-300" id="deleteUserBtn"
-                                            onClick={async () => {
-                                                // @ts-ignore
-                                                await deleteUser(user?._id)
-                                            }}>
+                                    <button 
+                                        className="text-red-400 hover:text-red-300" 
+                                        id="deleteUserBtn"
+                                        onClick={() => deleteUser(user._id)}
+                                    >
                                         Eliminar
                                     </button>
-
                                 </td>
                             </tr>
                         ))
                     )}
-
                     </tbody>
                 </table>
             </div>
@@ -178,20 +182,23 @@ function Access() {
             {/* ======= MODAL ======= */}
             <div
                 id="createUserModal"
-                className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center  transition-opacity 
+                className={`fixed inset-0 bg-black/50 backdrop-blur-sm flex justify-center items-center transition-opacity 
                     ${!modal ? "opacity-0 pointer-events-none" : "opacity-100 pointer-events-auto"}
-                    `}
+                `}
             >
                 <div className="bg-[#1e2532] w-full max-w-lg rounded-xl shadow-lg p-6 border border-[#2a3240]">
 
                     {/* MODAL HEADER */}
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-xl font-semibold text-white">Nuevo Usuario</h3>
+                        <h3 className="text-xl font-semibold text-white">
+                            {httpMode === "POST" ? "Nuevo Usuario" : "Editar Usuario"}
+                        </h3>
 
-                        <button className="text-gray-400 hover:text-gray-200" id="closeCreateModal" onClick={() => {
-                            setModal(false)
-                            cleanFields()
-                        }}>
+                        <button 
+                            className="text-gray-400 hover:text-gray-200" 
+                            id="closeCreateModal" 
+                            onClick={handleCloseModal}
+                        >
                             ✕
                         </button>
                     </div>
@@ -206,6 +213,7 @@ function Access() {
                                 className="w-full mt-1 px-3 py-2 rounded-lg bg-[#2a3240] text-white outline-none border border-transparent focus:border-blue-500"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
+                                required
                             />
                         </div>
 
@@ -216,6 +224,7 @@ function Access() {
                                 className="w-full mt-1 px-3 py-2 rounded-lg bg-[#2a3240] text-white outline-none border border-transparent focus:border-blue-500"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
+                                required
                             />
                         </div>
 
@@ -226,6 +235,7 @@ function Access() {
                                 className="w-full mt-1 px-3 py-2 rounded-lg bg-[#2a3240] text-white outline-none border border-transparent focus:border-blue-500"
                                 value={rfid}
                                 onChange={(e) => setRfid(e.target.value)}
+                                required
                             />
                         </div>
 
@@ -239,9 +249,7 @@ function Access() {
                                 <option value="admin">Admin</option>
                                 <option value="user">User</option>
                                 <option value="guest">Guest</option>
-
                             </select>
-
                         </div>
 
                         <div>
@@ -258,16 +266,18 @@ function Access() {
 
                         {/* BUTTONS */}
                         <div className="flex justify-end gap-3 mt-4">
-                            <button className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
-                                    onClick={(e) => {
-                                        e.preventDefault()
-                                        setModal(false)
-                                        cleanFields()
-                                    }}>
+                            <button 
+                                type="button"
+                                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg"
+                                onClick={handleCloseModal}
+                            >
                                 Cancelar
                             </button>
 
-                            <button className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg">
+                            <button 
+                                type="submit"
+                                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg"
+                            >
                                 Guardar
                             </button>
                         </div>

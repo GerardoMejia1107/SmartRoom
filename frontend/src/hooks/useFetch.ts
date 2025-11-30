@@ -1,4 +1,4 @@
-import {useState} from "react";
+import { useState } from "react";
 
 const DEFAULT_FETCH_OPTIONS = {
     headers: {
@@ -10,34 +10,46 @@ const DEFAULT_FETCH_OPTIONS = {
 type CommonFetch = {
     input?: Record<string, any>;
     fetchOptions?: RequestInit;
-    urlParams?: string;          // ✓ Permite pasar /:id u otras rutas dinámicas
+    urlParams?: string;
 };
 
-export function useFetch<T>(baseUrl: string, method: "GET" | "POST" | "PUT" | "DELETE") {
+export function useFetch<T>(
+    baseUrl: string,
+    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE"
+) {
     const [isLoading, setIsLoading] = useState(false);
     const [data, setData] = useState<T | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    const commonFetch = async ({ input, fetchOptions = {}, urlParams = "" }: CommonFetch) => {
-        try {
-            setIsLoading(true);
-            setError(null);
+    const commonFetch = async ({
+                                   input,
+                                   fetchOptions = {},
+                                   urlParams = ""
+                               }: CommonFetch) => {
 
+        setIsLoading(true);
+        setError(null);
+
+        try {
             const fullUrl = `${baseUrl}${urlParams}`;
 
             const response = await fetch(fullUrl, {
                 method,
                 ...DEFAULT_FETCH_OPTIONS,
                 ...fetchOptions,
-                body: method === "GET" || method === "DELETE"
-                    ? undefined
-                    : JSON.stringify(input)
+                body:
+                    method === "GET" || method === "DELETE"
+                        ? undefined
+                        : JSON.stringify(input)
             });
 
-            const resData = await response.json();
-            setData(resData);
+            const json = await response.json();
+            setData(json);
+            return json;
+
         } catch (err: any) {
-            setError(err.message || "Error desconocido");
+            setError(err.message || "Unknown fetch error");
+            throw err;
         } finally {
             setIsLoading(false);
         }

@@ -1,6 +1,8 @@
 import {Schema, Document, model} from "mongoose";
 
 export interface IDevice extends Document {
+    available: boolean;
+
     door: {
         state: 'open' | 'closed' | 'locked'
         last_changed: Date
@@ -8,14 +10,9 @@ export interface IDevice extends Document {
     window: {
         state: 'open' | 'closed'
         last_changed: Date
-        angle_deg: number
     };
     lights: {
         on: boolean
-        last_changed: Date
-    };
-    alarm: {
-        active: boolean
         last_changed: Date
     };
     updatedAt: Date
@@ -23,23 +20,20 @@ export interface IDevice extends Document {
 
 const DeviceSchema = new Schema<IDevice>(
     {
+        available: {type: Boolean, default: false},
         door: {
             state: {type: String, enum: ["open", "closed", "locked"], default: "closed"},
-            lastChange: {type: Date, default: Date.now},
+            last_changed: {type: Date, default: Date.now},
         },
         window: {
             state: {type: String, enum: ["open", "closed"], default: "closed"},
-            angle_deg: {type: Number, default: 0},
-            lastChange: {type: Date, default: Date.now},
+            last_changed: {type: Date, default: Date.now},
         },
         lights: {
             on: {type: Boolean, default: false},
-            lastChange: {type: Date, default: Date.now},
+            last_changed: {type: Date, default: Date.now},
         },
-        alarm: {
-            active: {type: Boolean, default: false},
-            lastChange: {type: Date, default: Date.now},
-        },
+
         updatedAt: {type: Date, default: Date.now},
     },
     {timestamps: false}

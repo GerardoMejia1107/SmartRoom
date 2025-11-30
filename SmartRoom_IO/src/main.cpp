@@ -153,13 +153,13 @@ void loop()
       openDoorOnce();
 
       // Enviar data de accceso permitido al backend
-      POST_data("http://192.168.1.44:3000/api/logs", "{\"uid\":\"" + uid + "\",\"authorized\":true,\"source\":\"esp32-A\"}");
+      POST_data("http://192.168.1.35:3000/api/logs", "{\"uid\":\"" + uid + "\",\"authorized\":true,\"source\":\"esp32-A\"}");
     }
     else
     {
       // Enviar data de acceso denegado al backend
       Serial.println(F("ACCESO DENEGADO"));
-      POST_data("http://192.168.1.44:3000/api/logs", "{\"uid\":\"" + uid + "\",\"authorized\":false,\"source\":\"esp32-A\"}");
+      POST_data("http://192.168.1.35:3000/api/logs", "{\"uid\":\"" + uid + "\",\"authorized\":false,\"source\":\"esp32-A\"}");
     }
 
     rfid.PICC_HaltA();
@@ -187,7 +187,7 @@ void loop()
     bool authRecent = (millis() - lastAuthOkMs) < AUTH_OK_GRACE_MS;
     if (presenceMs >= PRESENCE_LIMIT_MS && !authRecent)
     {
-      POST_data("http://192.168.1.44:3000/api/alerts", "{\"type\":\"unauthorized_presence\","
+      POST_data("http://192.168.1.35:3000/api/alerts", "{\"type\":\"unauthorized_presence\","
                                                        "\"description\":\"Presencia >30s sin RFID valido\","
                                                        "\"duration_ms\":30000,"
                                                        "\"source\":\"esp32-A\"}");

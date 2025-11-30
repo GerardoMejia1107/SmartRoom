@@ -2,7 +2,7 @@
 #include <ArduinoJson.h>
 #include "../lib/mqtt_config.h"
 
-const char *MQTT_HOST = "192.168.1.44";
+const char *MQTT_HOST = "192.168.1.35";
 const int MQTT_PORT = 1883;
 const char *MQTT_USER = "mariaDB";
 const char *MQTT_PASS = "root";

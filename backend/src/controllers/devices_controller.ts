@@ -2,11 +2,12 @@ import {Request, Response} from "express";
 import {DeviceService} from "../services/devices_service";
 import {SensorService} from "../services/sensors_service";
 import {Device} from "../models/device_model";
+import mqtt_client from "../mqtt/mqtt_client";
 
 export class DeviceController {
     static async getAll(req: Request, res: Response) {
         try {
-            const devices = await DeviceService.getAll()
+            const devices = await DeviceService.getOrCreateControllerDevice()
             res.json(devices);
         } catch (e) {
             console.error("Error fetching devices:", e);
@@ -14,74 +15,73 @@ export class DeviceController {
         }
     }
 
-    static async getById(req: Request, res: Response): Promise<void> {
+    static async updateManualControl(req: Request, res: Response) {
         try {
-            const device = await DeviceService.getById(req.params.id)
-            if (!device) {
-                res.status(404).json({error: "No such device"})
-                return
+            const {available} = req.body;
+
+            if (typeof available !== "boolean") {
+                return res.status(400).json({error: "available must be boolean"});
             }
-            res.json(device)
-        } catch (e) {
-            console.error("Error getting sensor:", e);
-            res.status(500).json({error: "Error getting sensor"})
+
+            const updated = await DeviceService.updateManualcontrol(available);
+
+            mqtt_client.publish(
+                "device/manual_control/available",
+                available ? "true" : "false",
+                {retain: true}
+            );
+
+            return res.json(updated);
+
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({error: "Error updating manual control"});
         }
     }
 
-    static async create(req: Request, res: Response): Promise<void> {
+
+    static async updateDoor(req: Request, res: Response) {
         try {
-            const newDevice = await DeviceService.create(req.body)
-            if (!newDevice) {
-                res.status(400).json({error: "Error creating device"})
-                return
-            }
-            res.status(201).json(newDevice)
-        } catch (e) {
-            console.error("Error creating device:", e);
-            res.status(400).json({error: "Error creating device"})
+            const {state} = req.body;
+            const updated = await DeviceService.updateDoor({
+                state
+            })
+
+            mqtt_client.publish("device/door/state", state, {retain: true});
+            return res.json(updated);
+
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({error: "Error updating window state"});
         }
     }
 
-    static async update(req: Request, res: Response): Promise<void> {
+    static async updateWindow(req: Request, res: Response) {
         try {
-            const updatedDevice = await DeviceService.update(req.params.id, req.body)
-            if (!updatedDevice) {
-                res.status(404).json({error: "No such device"})
-                return
-            }
-            res.json(updatedDevice)
-        } catch (e) {
-            console.error("Error updating device:", e);
-            res.status(400).json({error: "Error updating device"})
+            const {state} = req.body
+            const updated = await DeviceService.updateWindow({
+                state
+            })
+            mqtt_client.publish("device/window/state", state, {retain: true});
+            return res.json({updated})
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({error: "Error updating window state"});
+
         }
     }
 
-    static async patch(req: Request, res: Response): Promise<void> {
+    static async updateLights(req: Request, res: Response) {
         try {
-            const updatedDevice = await DeviceService.updatePartial(req.body)
-            if (!updatedDevice) {
-                res.status(404).json({error: "No such device"})
-                return
-            }
-            res.json(updatedDevice)
-
-        } catch (e) {
-            console.error("Error patching device:", e);
-            res.status(400).json({error: "Error patching device"})
-        }
-    }
-
-    static async delete(req: Request, res: Response): Promise<void> {
-        try {
-            const deletedDevice = await DeviceService.delete(req.params.id)
-            if (!deletedDevice) {
-                res.status(404).json({error: "No such device"})
-                return
-            }
-            res.json({message: "Device deleted", device: deletedDevice})
-        } catch (e) {
-            console.error("Error deleting device:", e);
-            res.status(500).json({error: "Error deleting device"})
+            const {on} = req.body
+            const updated = await DeviceService.updateLights({
+                on
+            })
+            mqtt_client.publish("device/lights/state", on ? "on" : "off", {retain: true});
+            return res.json({updated})
+        } catch (err) {
+            console.error(err);
+            return res.status(500).json({error: "Error updating lights state"});
         }
     }
 

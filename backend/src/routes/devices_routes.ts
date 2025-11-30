@@ -4,10 +4,14 @@ import {DeviceController} from "../controllers/devices_controller";
 const router = Router();
 
 router.get('/', DeviceController.getAll)
-router.get('/:id', DeviceController.getById)
-router.post('/', DeviceController.create)
-router.put('/:id', DeviceController.update)
-router.delete('/:id', DeviceController.delete)
-router.patch('/', DeviceController.patch)
+
+router.patch('/available', DeviceController.updateManualControl)
+
+//Actualizar puerta
+router.patch("/door", DeviceController.updateDoor);
+//Actualizar ventana
+router.patch("/window", DeviceController.updateWindow);
+//Actualizar luces
+router.patch(("/lights"), DeviceController.updateLights);
 
 export default router;
