@@ -3,6 +3,8 @@ import {useEffect, useCallback, memo} from "react";
 
 import {useDeleteLog, useGetLogs} from "../api/logsApi.ts";
 import {useDeleteAlert, useGetAlerts} from "../api/alertsApi.ts";
+import { useGetUsers } from "../api/usersApi.ts";
+
 
 // Componente memoizado para cada log item
 const LogItem = memo(({ log, onDelete }: { log: any; onDelete: (id: string) => void }) => (
@@ -22,7 +24,7 @@ const LogItem = memo(({ log, onDelete }: { log: any; onDelete: (id: string) => v
             {/* USER DATA */}
             <div className="flex flex-col leading-tight">
                 <span className="font-semibold text-white">
-                    {log.uid || "Usuario desconocido"}
+                    {log.name || "Usuario desconocido"}
                 </span>
                 <span className="text-gray-400 text-xs">
                     RFID: {log.uid}
@@ -109,9 +111,11 @@ AlertItem.displayName = 'AlertItem';
 function Events() {
     const {isLoading, commonFetch, data: logs} = useGetLogs();
     const {isLoading: isLoadingAlerts, commonFetch: commonFetchAlerts, data: alerts} = useGetAlerts()
+    const {isLoading: isLoadingUsers, commonFetch: commonFetchUsers, data: users} = useGetUsers();
 
     const {commonFetch: deleteStoredLogs} = useDeleteLog()
     const {commonFetch: deleteStoredAlerts} = useDeleteAlert();
+
 
     // Memoizar funciones de eliminación
     const deleteLog = useCallback(async (uid: string) => {
@@ -125,9 +129,21 @@ function Events() {
     }, [deleteStoredAlerts, commonFetchAlerts]);
 
     useEffect(() => {
+        commonFetchUsers({});
         commonFetch({});
         commonFetchAlerts({});
     }, []);
+
+    let detailedLogs = logs?.map(log => {
+        const user = users?.find(u => u.rfid_uid === log.uid);
+
+        return {
+            ...log,
+            name: user ? user.name : "Desconocido",
+        }
+    })
+
+    
 
     return (
         <div className="w-full max-w-4xl mx-auto flex flex-col gap-6 pb-10">
@@ -145,7 +161,7 @@ function Events() {
                 {isLoading ? (
                     <p className="p-4 text-gray-400">Cargando logs...</p>
                 ) : logs && logs.length > 0 ? (
-                    logs.map((log) => (
+                    detailedLogs?.map((log) => (
                         <LogItem 
                             key={log._id} 
                             log={log} 

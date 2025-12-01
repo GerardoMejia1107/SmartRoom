@@ -48,7 +48,9 @@ export class UserController {
       let users = await User.find({ active: true }).select("rfid_uid -_id");
       let allowed = users.map((u) => u.rfid_uid);
 
-      mqtt_client.publish("rfid/allowed/update", JSON.stringify(allowed), {retain: true});
+      mqtt_client.publish("rfid/allowed/update", JSON.stringify(allowed), {
+        retain: true,
+      });
       console.log("[MQTT] Publicando allowed:", allowed);
 
       res.status(201).json(newUser);
@@ -65,6 +67,12 @@ export class UserController {
         res.status(404).json({ message: "User not found" });
         return;
       }
+      let users = await User.find({ active: true }).select("rfid_uid -_id");
+      let allowed = users.map((u) => u.rfid_uid);
+      mqtt_client.publish("rfid/allowed/update", JSON.stringify(allowed), {
+        retain: true,
+      });
+
       res.json(updatedUser);
     } catch (error) {
       console.error("Error updating user:", error);
@@ -79,6 +87,11 @@ export class UserController {
         res.status(404).json({ message: "User not found" });
         return;
       }
+      let users = await User.find({ active: true }).select("rfid_uid -_id");
+      let allowed = users.map((u) => u.rfid_uid);
+      mqtt_client.publish("rfid/allowed/update", JSON.stringify(allowed), {
+        retain: true,
+      });
       res.json({ message: "User deleted", user: deletedUser });
     } catch (error) {
       console.error("Error deleting user:", error);
