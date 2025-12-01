@@ -1,4 +1,4 @@
-// main.cpp - OPTIMIZADO
+// main.cpp - OPTIMIZADO + LDR FIX
 #include <Arduino.h>
 #include <Servo.h>
 #include <DHT.h>
@@ -18,7 +18,7 @@ const char *URI_BACKEND = "http://192.168.1.35:3000/api/sensors";
 HTTPClient http;
 WiFiClient client;
 
-// POST cada 30 segundos (reducido de 10s para no saturar backend)
+// POST cada 30 segundos
 const unsigned long POST_INTERVAL_RATE = 30000;
 static unsigned long PREVIOUS_MILLIS = 0;
 
@@ -46,10 +46,10 @@ double LDR_ON_PERCENTAGE = 30.0;
 double LDR_OFF_PERCENTAGE = 55.0;
 
 // ========= TIMERS OPTIMIZADOS =========
-const unsigned long DHT_MS = 120000;      // 2 minutos (era 2s)
-const unsigned long PIR_MS = 60000;       // 1 minuto (era 500ms)
-const unsigned long LDR_CHECK_MS = 60000; // 1 minuto (nuevo)
-const unsigned long LDR_PRINT_MS = 60000; // 1 minuto (era 2s)
+const unsigned long DHT_MS = 120000;      // 2 minutos
+const unsigned long PIR_MS = 5000;        // 5 segundos
+const unsigned long LDR_CHECK_MS = 5000;  // 5 segundos - LECTURA CONSTANTE
+const unsigned long LDR_PRINT_MS = 30000; // 30 segundos - solo para debug
 
 unsigned long lastDht = 0;
 unsigned long lastPir = 0;
@@ -195,7 +195,7 @@ void POST_data(const String &URL, const String &payload)
   isPosting = true;
 
   http.begin(client, URL);
-  http.setTimeout(500); // 500ms máx (era 2000ms)
+  http.setTimeout(500); // 500ms máx
   http.addHeader("Content-Type", "application/json");
 
   int httpCode = http.POST(payload);
@@ -248,15 +248,17 @@ void updateSensorCache()
     }
   }
 
-  // LDR cada 1 minuto
+  // LDR cada 5 segundos - SIEMPRE actualizar el cache
   if (now - lastLdrCheck >= LDR_CHECK_MS)
   {
     lastLdrCheck = now;
 
+    // ACTUALIZAR SIEMPRE EL CACHE
     sensorCache.ldrRaw = analogRead(LDR_PIN);
     sensorCache.ldrPct = 100.0f - ((sensorCache.ldrRaw / 1023.0f) * 100.0f);
+    sensorCache.lastUpdate = now; // Actualizar timestamp
 
-    // Control automático del LED
+    // Control automático del LED SOLO si está en modo AUTO
     if (!manualOverrideLED)
     {
       if (!ledLuzEncendido && sensorCache.ldrPct < LDR_ON_PERCENTAGE)
@@ -284,7 +286,7 @@ void updateSensorCache()
     }
   }
 
-  // STATUS LDR cada 1 minuto
+  // STATUS LDR cada 30 segundos
   if (now - lastLdrPrint >= LDR_PRINT_MS)
   {
     lastLdrPrint = now;
@@ -346,12 +348,12 @@ void setup()
   Serial.begin(115200);
   delay(100);
   Serial.println();
-  Serial.println(F("ESP8266-B: DHT11 + Ventana + LDR/LED + PIR + MQTT [OPTIMIZADO]"));
+  Serial.println(F("ESP8266-B: DHT11 + Ventana + LDR/LED + PIR + MQTT [LDR FIX]"));
 
   // WIFI
   Serial.print("Conectando WiFi");
   WiFi.begin(WIFI_SSID, WIFI_PASS);
-  WiFi.setSleepMode(WIFI_NONE_SLEEP); // Evitar sleep mode para mejor MQTT
+  WiFi.setSleepMode(WIFI_NONE_SLEEP);
 
   while (WiFi.status() != WL_CONNECTED)
   {
@@ -381,7 +383,7 @@ void setup()
   sensorCache.ldrRaw = analogRead(LDR_PIN);
   sensorCache.ldrPct = 100.0f - ((sensorCache.ldrRaw / 1023.0f) * 100.0f);
 
-  // ★★★ LECTURA INICIAL DHT11 (CRÍTICO) ★★★
+  //  INICIAL DHT11 (CRÍTICO)
   Serial.println(F("\n[DHT] Esperando inicialización (2s)..."));
   delay(2000); // DHT11 necesita 2s después de encender
 

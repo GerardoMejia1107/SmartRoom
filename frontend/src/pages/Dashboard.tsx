@@ -1,5 +1,5 @@
 // Dashboard.tsx - OPTIMIZADO
-import {LucideDroplets, Sun, Thermometer} from "lucide-react";
+import {ActivityIcon, AlarmCheckIcon, LucideDroplets, Sun, Thermometer} from "lucide-react";
 import {
     LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid, Legend
 } from "recharts";
@@ -13,6 +13,7 @@ import {
     useUpdateManualControl,
     useUpdateWindow
 } from "../api/controlsApi";
+
 
 function Dashboard() {
 
@@ -30,8 +31,8 @@ function Dashboard() {
     const [manualControlOn, setManualControlOn] = useState(false);
 
     // Memoizar el último row para evitar recalculaciones
-    const lastRow = useMemo(() => 
-        sensorsData?.[sensorsData.length - 1], 
+    const lastRow = useMemo(() =>
+            sensorsData?.[sensorsData.length - 1],
         [sensorsData]
     );
 
@@ -57,59 +58,91 @@ function Dashboard() {
         const interval = setInterval(() => {
             getStoredSensorsData({});
         }, 5000);
-        
+
         return () => clearInterval(interval);
     }, [getStoredSensorsData]); // Dependencia explícita
 
     // HANDLERS MEMOIZADOS - Esto previene re-renderizados innecesarios
     const handleDoorChange = useCallback(async (v: boolean) => {
+        // 1. UI instantánea
         setDoorOpen(v);
-        await updateDoor({input: {state: v ? "open" : "closed"}});
-        await getStoredDevicesData({}); // Refrescar después de actualizar
-    }, [updateDoor, getStoredDevicesData]);
+
+        try {
+            // 2. Update rápido al backend
+            await updateDoor({input: {state: v ? "open" : "closed"}});
+        } catch (err) {
+            console.error("Door update failed, reverting...");
+            setDoorOpen(!v); // revertir solo si falla
+        }
+    }, [updateDoor]);
+
 
     const handleWindowChange = useCallback(async (v: boolean) => {
         setWindowOpen(v);
-        await updateWindow({input: {state: v ? "open" : "closed"}});
-        await getStoredDevicesData({}); // Refrescar después de actualizar
-    }, [updateWindow, getStoredDevicesData]);
+
+        try {
+            await updateWindow({input: {state: v ? "open" : "closed"}});
+        } catch {
+            console.error("Window update failed");
+            setWindowOpen(!v);
+        }
+    }, [updateWindow]);
+
 
     const handleLightChange = useCallback(async (v: boolean) => {
         setLightOn(v);
-        await updateLights({input: {on: v}});
-        await getStoredDevicesData({}); // Refrescar después de actualizar
-    }, [updateLights, getStoredDevicesData]);
+
+        try {
+            await updateLights({input: {on: v}});
+        } catch {
+            console.error("Lights update failed");
+            setLightOn(!v);
+        }
+    }, [updateLights]);
+
 
     const handleManualControlChange = useCallback(async (v: boolean) => {
         setManualControlOn(v);
-        await updateManualControl({input: {available: v}});
-        await getStoredDevicesData({}); // Refrescar después de actualizar
-    }, [updateManualControl, getStoredDevicesData]);
+
+        try {
+            await updateManualControl({input: {available: v}});
+        } catch {
+            console.error("Manual control update failed");
+            setManualControlOn(!v);
+        }
+    }, [updateManualControl]);
+
 
     // SENSOR BOXES VISUAL - Memoizado
     const sensors = useMemo(() => [
         {icon: <Thermometer size={36}/>, label: "Temperature", value: lastRow?.temperature_c, unit: "°C"},
         {icon: <LucideDroplets size={36}/>, label: "Humidity", value: lastRow?.humidity_pct, unit: "%"},
-        {icon: <Sun size={36}/>, label: "Light", value: lastRow?.light_pct, unit: "%"}
+        {icon: <Sun size={36}/>, label: "Light", value: lastRow?.light_pct, unit: "%"},
+        {
+            icon: <ActivityIcon size={36}/>,
+            label: "Movement",
+            value: lastRow?.motion ? "Motion detected" : "No motion",
+            unit: ""
+        }
     ], [lastRow]);
 
     // CHART DATA - Memoizado para evitar recalcular en cada render
     const formattedChartData = useMemo(() =>
-        sensorsData?.map(item => {
-            const time = new Date(item.timestamp).toLocaleTimeString("es-SV", {
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric"
-            });
+            sensorsData?.map(item => {
+                const time = new Date(item.timestamp).toLocaleTimeString("es-SV", {
+                    hour: "numeric",
+                    minute: "numeric",
+                    second: "numeric"
+                });
 
-            return {
-                time,
-                temp: Number(item.temperature_c),
-                humidity: Number(item.humidity_pct),
-                light: Number(item.light_pct)
-            };
-        }) ?? []
-    , [sensorsData]);
+                return {
+                    time,
+                    temp: Number(item.temperature_c),
+                    humidity: Number(item.humidity_pct),
+                    light: Number(item.light_pct)
+                };
+            }) ?? []
+        , [sensorsData]);
 
     return (
         <div className="w-full px-4 py-3 flex flex-col gap-3">
@@ -161,7 +194,7 @@ function Dashboard() {
                 <div className="xl:col-span-2 bg-[#1f2530] p-5 rounded-xl shadow border border-[#2a323e]">
                     <h2 className="text-xl font-semibold mb-4">Sensor Monitoring</h2>
 
-                    <LineChart width={900} height={350} data={formattedChartData}>
+                    <LineChart width={900} height={460} data={formattedChartData}>
                         <CartesianGrid strokeDasharray="3 3" stroke="#2a323e"/>
                         <XAxis dataKey="time" stroke="#ccc"/>
                         <YAxis stroke="#ccc"/>
