@@ -794,6 +794,7 @@ mosquitto
 - 💾 **Base de Datos**: Los datos de sensores se guardan cada lectura. Considerar agregación para grandes volúmenes.
 - 🔄 **MQTT**: Los mensajes se persisten (retain: true) para no perder datos.
 - ⚡ **Tiempo Real**: Actualización cada 5 segundos en frontend (configurable).
+- ‼️**Bug**: El modo manual presenta un bug: cuando se activa, luego se enciende algún módulo y finalmente se desactiva el modo manual sin apagar antes ese módulo, la lógica automática deja de funcionar. Para evitarlo, antes de salir del modo manual se debe verificar que ningún módulo continúe activado; de lo contrario, el modo automático no tomará el control correctamente.
 
 
 **Última actualización**: Diciembre 1, 2024  
