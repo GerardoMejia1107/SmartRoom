@@ -1,32 +1,32 @@
 # SmartRoom
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Licencia: MIT](https://img.shields.io/badge/Licencia-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-SmartRoom is an IoT-based smart room automation system that provides real-time environmental monitoring, access control, and automated device management. The system integrates ESP8266 microcontrollers with a modern web application for comprehensive room automation.
+SmartRoom es un sistema de automatización de habitaciones inteligentes basado en IoT que proporciona monitoreo ambiental en tiempo real, control de acceso y gestión automatizada de dispositivos. El sistema integra microcontroladores ESP8266 con una aplicación web moderna para una automatización completa de habitaciones.
 
-## 🚀 Features
+## 🚀 Características
 
-- **Environmental Monitoring**: Real-time temperature, humidity, and light level sensing
-- **Motion Detection**: PIR-based motion detection with configurable alerts
-- **Access Control**: RFID-based door access with user authentication
-- **Automated Control**: Automatic window and light control based on sensor thresholds
-- **Manual Override**: Remote device control via web dashboard
-- **Alert System**: Real-time alerts for security and environmental events
-- **Access Logging**: Complete audit trail of access attempts
+- **Monitoreo Ambiental**: Sensado en tiempo real de temperatura, humedad y nivel de luz
+- **Detección de Movimiento**: Detección de movimiento basada en PIR con alertas configurables
+- **Control de Acceso**: Acceso a puertas basado en RFID con autenticación de usuarios
+- **Control Automatizado**: Control automático de ventanas y luces basado en umbrales de sensores
+- **Modo Manual**: Control remoto de dispositivos a través del panel web
+- **Sistema de Alertas**: Alertas en tiempo real para eventos de seguridad y ambientales
+- **Registro de Accesos**: Historial completo de intentos de acceso
 
-## 🏗️ Architecture
+## 🏗️ Arquitectura
 
 ```
 ┌─────────────────┐     ┌─────────────────┐
 │   ESP8266-A     │     │   ESP8266-B     │
-│ (Access Control)│     │ (Environmental) │
+│ (Control Acceso)│     │   (Ambiental)   │
 └────────┬────────┘     └────────┬────────┘
          │                       │
          │  HTTP/MQTT            │  HTTP/MQTT
          │                       │
          ▼                       ▼
     ┌─────────────────────────────────┐
-    │         MQTT Broker             │
+    │         Broker MQTT             │
     └─────────────────┬───────────────┘
                       │
     ┌─────────────────▼───────────────┐
@@ -42,148 +42,148 @@ SmartRoom is an IoT-based smart room automation system that provides real-time e
     └─────────────────────────────────┘
 ```
 
-## 📚 Documentation
+## 📚 Documentación
 
-| Document | Description |
-|----------|-------------|
-| [Technical Documentation](docs/TECHNICAL.md) | Detailed technical specifications and system overview |
-| [Architecture](docs/ARCHITECTURE.md) | System architecture with diagrams |
-| [Setup Guide](docs/SETUP.md) | Development environment setup instructions |
-| [API Reference](docs/API.md) | REST API documentation with examples |
-| [Contributing](docs/CONTRIBUTING.md) | Guidelines for contributing to the project |
-| [Changelog](docs/CHANGELOG.md) | Version history and release notes |
+| Documento | Descripción |
+|-----------|-------------|
+| [Documentación Técnica](docs/TECHNICAL.md) | Especificaciones técnicas detalladas y visión general del sistema |
+| [Arquitectura](docs/ARCHITECTURE.md) | Arquitectura del sistema con diagramas |
+| [Guía de Configuración](docs/SETUP.md) | Instrucciones de configuración del entorno de desarrollo |
+| [Referencia de API](docs/API.md) | Documentación de la API REST con ejemplos |
+| [Contribución](docs/CONTRIBUTING.md) | Guías para contribuir al proyecto |
+| [Changelog](docs/CHANGELOG.md) | Historial de versiones y notas de lanzamiento |
 
-## 🛠️ Tech Stack
+## 🛠️ Stack Tecnológico
 
 ### Backend
 - **Runtime**: Node.js 18+
 - **Framework**: Express.js 5.x
-- **Language**: TypeScript
-- **Database**: MongoDB with Mongoose ODM
-- **Messaging**: MQTT (PubSubClient)
+- **Lenguaje**: TypeScript
+- **Base de Datos**: MongoDB con Mongoose ODM
+- **Mensajería**: MQTT (PubSubClient)
 
 ### Frontend
-- **Library**: React 19
-- **Build Tool**: Vite 7
-- **Styling**: Tailwind CSS
-- **Charts**: Recharts
-- **Icons**: Lucide React
+- **Librería**: React 19
+- **Herramienta de Build**: Vite 7
+- **Estilos**: Tailwind CSS
+- **Gráficos**: Recharts
+- **Íconos**: Lucide React
+- **Notificaciones**: React Hot Toast
 
 ### Firmware
-- **Platform**: ESP8266 (NodeMCU v2)
+- **Plataforma**: ESP8266 (NodeMCU v2)
 - **Framework**: Arduino (PlatformIO)
-- **Sensors**: DHT11, LDR, PIR, HC-SR04, MFRC522
+- **Sensores**: DHT11, LDR, PIR, HC-SR04, MFRC522
 
-## 📁 Project Structure
+## 📁 Estructura del Proyecto
 
 ```
 SmartRoom/
-├── backend/                 # Node.js + Express API
+├── backend/                 # API Node.js + Express
 │   ├── src/
-│   │   ├── controllers/     # Request handlers
-│   │   ├── models/          # Mongoose schemas
-│   │   ├── routes/          # API routes
-│   │   ├── services/        # Business logic
-│   │   └── mqtt/            # MQTT client
+│   │   ├── controllers/     # Manejadores de peticiones
+│   │   ├── models/          # Esquemas de Mongoose
+│   │   ├── routes/          # Rutas de la API
+│   │   ├── services/        # Lógica de negocio
+│   │   └── mqtt/            # Cliente MQTT
 │   └── package.json
-├── frontend/                # React + Vite application
+├── frontend/                # Aplicación React + Vite
 │   ├── src/
-│   │   ├── api/             # API client functions
-│   │   ├── components/      # React components
-│   │   ├── pages/           # Page components
-│   │   └── types/           # TypeScript types
+│   │   ├── api/             # Funciones cliente de API
+│   │   ├── components/      # Componentes React
+│   │   ├── pages/           # Componentes de página
+│   │   └── types/           # Tipos TypeScript
 │   └── package.json
-├── SmartRoom_IO/            # ESP8266 firmware (Access)
+├── SmartRoom_IO/            # Firmware ESP8266 (Control de Acceso)
 │   ├── src/
 │   └── platformio.ini
-├── SmartRoom_IO_2/          # ESP8266 firmware (Environmental)
+├── SmartRoom_IO_2/          # Firmware ESP8266 (Ambiental)
 │   ├── src/
 │   └── platformio.ini
-├── arduino/                 # Additional Arduino sketches
-└── docs/                    # Documentation
+└── docs/                    # Documentación
 ```
 
-## ⚡ Quick Start
+## ⚡ Inicio Rápido
 
-### Prerequisites
+### Prerrequisitos
 
 - Node.js 18+
 - MongoDB 6+
-- npm or yarn
+- npm o yarn
 
 ### Backend
 
 ```bash
-# Navigate to backend directory
+# Navegar al directorio del backend
 cd backend
 
-# Install dependencies
+# Instalar dependencias
 npm install
 
-# Create environment file
+# Crear archivo de entorno
 echo "PORT=3000
 NODE_ENV=development
 MONGO_URI=mongodb://localhost:27017/smartroom" > .env
 
-# Start development server
+# Iniciar servidor de desarrollo
 npm run nodemon
 ```
 
 ### Frontend
 
 ```bash
-# Navigate to frontend directory
+# Navegar al directorio del frontend
 cd frontend
 
-# Install dependencies
+# Instalar dependencias
 npm install
 
-# Start development server
+# Iniciar servidor de desarrollo
 npm run dev
 ```
 
-Open your browser to `http://localhost:5173`
+Abrir el navegador en `http://localhost:5173`
 
 ### Firmware
 
-1. Install [PlatformIO](https://platformio.org/)
-2. Open `SmartRoom_IO` or `SmartRoom_IO_2` in your IDE
-3. Update WiFi credentials in `src/main.cpp`
-4. Build and upload to ESP8266
+1. Instalar [PlatformIO](https://platformio.org/)
+2. Abrir `SmartRoom_IO` o `SmartRoom_IO_2` en tu IDE
+3. Actualizar credenciales WiFi en `src/main.cpp`
+4. Compilar y cargar al ESP8266
 
-For detailed setup instructions, see [SETUP.md](docs/SETUP.md).
+Para instrucciones detalladas de configuración, ver [SETUP.md](docs/SETUP.md).
 
-## 🔧 Configuration
+## 🔧 Configuración
 
-### Environment Variables
+### Variables de Entorno
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `PORT` | API server port | `3000` |
-| `NODE_ENV` | Environment mode | `development` |
-| `MONGO_URI` | MongoDB connection string | Required |
+| Variable | Descripción | Por Defecto |
+|----------|-------------|-------------|
+| `PORT` | Puerto del servidor API | `3000` |
+| `NODE_ENV` | Modo de entorno | `development` |
+| `MONGO_URI` | Cadena de conexión MongoDB | Requerido |
 
-## 📊 Languages Breakdown
+## 📊 Desglose de Lenguajes
 
-- **TypeScript**: Backend API, Frontend application
-- **C++**: ESP8266 firmware (Arduino/PlatformIO)
-- **HTML/CSS**: Frontend UI with Tailwind CSS
+- **TypeScript**: API Backend, Aplicación Frontend
+- **C++**: Firmware ESP8266 (Arduino/PlatformIO)
+- **HTML/CSS**: Interfaz Frontend con Tailwind CSS
 
-## 🤝 Contributing
+## 🤝 Contribuir
 
-Contributions are welcome! Please read our [Contributing Guidelines](docs/CONTRIBUTING.md) before submitting a Pull Request.
+¡Las contribuciones son bienvenidas! Por favor lee nuestras [Guías de Contribución](docs/CONTRIBUTING.md) antes de enviar un Pull Request.
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'feat: add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Hacer fork del repositorio
+2. Crear tu rama de feature (`git checkout -b feature/nueva-funcionalidad`)
+3. Hacer commit de tus cambios (`git commit -m 'feat: agregar nueva funcionalidad'`)
+4. Hacer push a la rama (`git push origin feature/nueva-funcionalidad`)
+5. Abrir un Pull Request
 
-## 📄 License
+## 📄 Licencia
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Este proyecto está licenciado bajo la Licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
 
-## 👤 Author
+## 👤 Autor
 
 **Gerardo Mejía**
 
@@ -191,4 +191,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-⭐ Star this repository if you find it useful!
+⭐ ¡Dale una estrella a este repositorio si te resulta útil!

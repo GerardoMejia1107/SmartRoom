@@ -1,89 +1,97 @@
 # Changelog
 
-All notable changes to the SmartRoom project will be documented in this file.
+Todos los cambios notables a este proyecto serán documentados en este archivo.
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+El formato está basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.1.0/),
+y este proyecto adhiere a [Versionado Semántico](https://semver.org/lang/es/).
 
-## [Unreleased]
+## [Sin Liberar]
 
-### Added
-- Initial project documentation
-  - Technical documentation (TECHNICAL.md)
-  - Architecture documentation with diagrams (ARCHITECTURE.md)
-  - Setup guide (SETUP.md)
-  - API reference (API.md)
-  - Contributing guidelines (CONTRIBUTING.md)
-  - Changelog template (CHANGELOG.md)
-- Updated README.md with project overview and documentation links
+### Agregado
+- Documentación inicial del proyecto
+  - Documentación técnica (TECHNICAL.md)
+  - Documentación de arquitectura con diagramas (ARCHITECTURE.md)
+  - Guía de configuración (SETUP.md)
+  - Referencia de API (API.md)
+  - Guías de contribución (CONTRIBUTING.md)
+  - Plantilla de changelog (CHANGELOG.md)
+- README.md actualizado con visión general del proyecto y enlaces a documentación
+- Nuevos componentes de frontend:
+  - Clock.tsx - Componente de reloj
+  - DoorSwitch.tsx - Control de puerta
+  - LightSwitch.tsx - Control de luz
+  - ManualSwitch.tsx - Toggle modo manual/auto
+  - WindowSwitch.tsx - Control de ventana
+- Dependencia react-hot-toast para notificaciones
 
-### Changed
-- (No changes yet)
+### Cambiado
+- Optimización de interfaz de usuario para evitar loops infinitos
+- Limpieza de comentarios en el código
 
-### Deprecated
-- (No deprecations yet)
+### Obsoleto
+- (Sin obsolescencias aún)
 
-### Removed
-- (No removals yet)
+### Eliminado
+- Directorio `arduino/` (código movido a proyectos PlatformIO)
 
-### Fixed
-- (No fixes yet)
+### Corregido
+- (Sin correcciones aún)
 
-### Security
-- (No security updates yet)
+### Seguridad
+- (Sin actualizaciones de seguridad aún)
 
 ---
 
-## How to Update This Changelog
+## Cómo Actualizar Este Changelog
 
-When making changes to the project, update this file as part of your pull request:
+Al hacer cambios al proyecto, actualizar este archivo como parte de tu pull request:
 
-### Categories
+### Categorías
 
-- **Added**: New features
-- **Changed**: Changes in existing functionality
-- **Deprecated**: Features that will be removed in future versions
-- **Removed**: Removed features
-- **Fixed**: Bug fixes
-- **Security**: Security fixes and updates
+- **Agregado**: Nuevas funcionalidades
+- **Cambiado**: Cambios en funcionalidad existente
+- **Obsoleto**: Funcionalidades que serán eliminadas en versiones futuras
+- **Eliminado**: Funcionalidades eliminadas
+- **Corregido**: Correcciones de bugs
+- **Seguridad**: Correcciones y actualizaciones de seguridad
 
-### Format
+### Formato
 
 ```markdown
-## [Version] - YYYY-MM-DD
+## [Versión] - AAAA-MM-DD
 
-### Category
-- Description of change ([#PR_NUMBER](link-to-pr)) by @username
+### Categoría
+- Descripción del cambio ([#NUMERO_PR](enlace-al-pr)) por @usuario
 ```
 
-### Example Entry
+### Ejemplo de Entrada
 
 ```markdown
 ## [1.0.0] - 2025-01-15
 
-### Added
-- User authentication with JWT ([#42](https://github.com/GerardoMejia1107/SmartRoom/pull/42)) by @contributor
-- Email notifications for alerts ([#45](https://github.com/GerardoMejia1107/SmartRoom/pull/45)) by @developer
+### Agregado
+- Autenticación de usuarios con JWT ([#42](https://github.com/GerardoMejia1107/SmartRoom/pull/42)) por @contribuidor
+- Notificaciones por email para alertas ([#45](https://github.com/GerardoMejia1107/SmartRoom/pull/45)) por @desarrollador
 
-### Changed
-- Upgraded MongoDB driver to version 8 ([#43](https://github.com/GerardoMejia1107/SmartRoom/pull/43))
+### Cambiado
+- Actualizado driver de MongoDB a versión 8 ([#43](https://github.com/GerardoMejia1107/SmartRoom/pull/43))
 
-### Fixed
-- Resolved issue with sensor readings showing null values ([#44](https://github.com/GerardoMejia1107/SmartRoom/pull/44))
+### Corregido
+- Resuelto problema con lecturas de sensores mostrando valores null ([#44](https://github.com/GerardoMejia1107/SmartRoom/pull/44))
 ```
 
-### Version Guidelines
+### Guías de Versiones
 
-- **Major version (X.0.0)**: Breaking changes, major feature additions
-- **Minor version (0.X.0)**: New features, non-breaking changes
-- **Patch version (0.0.X)**: Bug fixes, minor improvements
-
----
-
-## Version History
-
-<!-- Future versions will be added above this line -->
+- **Versión mayor (X.0.0)**: Cambios que rompen compatibilidad, adiciones de funcionalidades mayores
+- **Versión menor (0.X.0)**: Nuevas funcionalidades, cambios que no rompen compatibilidad
+- **Versión patch (0.0.X)**: Correcciones de bugs, mejoras menores
 
 ---
 
-*For the complete list of changes, see the [commit history](https://github.com/GerardoMejia1107/SmartRoom/commits/main).*
+## Historial de Versiones
+
+<!-- Versiones futuras serán agregadas arriba de esta línea -->
+
+---
+
+*Para la lista completa de cambios, ver el [historial de commits](https://github.com/GerardoMejia1107/SmartRoom/commits/main).*

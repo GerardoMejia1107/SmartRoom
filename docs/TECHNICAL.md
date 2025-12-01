@@ -1,106 +1,106 @@
-# SmartRoom Technical Documentation
+# Documentación Técnica de SmartRoom
 
-This document provides comprehensive technical documentation for the SmartRoom IoT smart room automation system.
+Este documento proporciona documentación técnica completa para el sistema de automatización de habitaciones inteligentes SmartRoom basado en IoT.
 
-## Table of Contents
+## Tabla de Contenidos
 
-- [Project Overview](#project-overview)
-- [Goals and Objectives](#goals-and-objectives)
-- [High-Level Architecture](#high-level-architecture)
-- [Data Flow](#data-flow)
-- [Hardware Components](#hardware-components)
-- [Software Stack](#software-stack)
-- [Data Models](#data-models)
-- [API Contract](#api-contract)
-- [Configuration](#configuration)
-- [Deployment](#deployment)
-- [Testing Strategy](#testing-strategy)
-- [Security Considerations](#security-considerations)
-- [Troubleshooting](#troubleshooting)
-
----
-
-## Project Overview
-
-SmartRoom is an IoT-based smart room automation system that monitors and controls various aspects of a room environment. The system integrates hardware sensors and actuators with a modern web application to provide real-time monitoring and control capabilities.
-
-### Key Features
-
-- **Environmental Monitoring**: Temperature, humidity, and light level sensing
-- **Motion Detection**: PIR-based motion detection with alert generation
-- **Access Control**: RFID-based door access with user authentication
-- **Automated Control**: Automatic window and light control based on sensor readings
-- **Manual Override**: Remote control of devices via web interface
-- **Alert System**: Real-time alerts for security and environmental events
-- **Access Logging**: Complete audit trail of access attempts
+- [Visión General del Proyecto](#visión-general-del-proyecto)
+- [Metas y Objetivos](#metas-y-objetivos)
+- [Arquitectura de Alto Nivel](#arquitectura-de-alto-nivel)
+- [Flujo de Datos](#flujo-de-datos)
+- [Componentes de Hardware](#componentes-de-hardware)
+- [Stack de Software](#stack-de-software)
+- [Modelos de Datos](#modelos-de-datos)
+- [Contrato de API](#contrato-de-api)
+- [Configuración](#configuración)
+- [Despliegue](#despliegue)
+- [Estrategia de Pruebas](#estrategia-de-pruebas)
+- [Consideraciones de Seguridad](#consideraciones-de-seguridad)
+- [Solución de Problemas](#solución-de-problemas)
 
 ---
 
-## Goals and Objectives
+## Visión General del Proyecto
 
-1. **Automation**: Automate room environment control (lighting, ventilation) based on sensor data
-2. **Security**: Provide secure RFID-based access control with comprehensive logging
-3. **Monitoring**: Real-time monitoring of environmental conditions
-4. **Accessibility**: User-friendly web interface for remote monitoring and control
-5. **Scalability**: Modular design supporting multiple rooms and sensors
-6. **Reliability**: Robust MQTT-based communication for real-time updates
+SmartRoom es un sistema de automatización de habitaciones inteligentes basado en IoT que monitorea y controla varios aspectos del ambiente de una habitación. El sistema integra sensores de hardware y actuadores con una aplicación web moderna para proporcionar capacidades de monitoreo y control en tiempo real.
+
+### Características Principales
+
+- **Monitoreo Ambiental**: Sensado de temperatura, humedad y nivel de luz
+- **Detección de Movimiento**: Detección de movimiento basada en PIR con generación de alertas
+- **Control de Acceso**: Acceso a puertas basado en RFID con autenticación de usuarios
+- **Control Automatizado**: Control automático de ventanas y luces basado en lecturas de sensores
+- **Modo Manual**: Control remoto de dispositivos a través de interfaz web
+- **Sistema de Alertas**: Alertas en tiempo real para eventos de seguridad y ambientales
+- **Registro de Accesos**: Historial completo de intentos de acceso
 
 ---
 
-## High-Level Architecture
+## Metas y Objetivos
 
-The SmartRoom system consists of the following major components:
+1. **Automatización**: Automatizar el control del ambiente de la habitación (iluminación, ventilación) basado en datos de sensores
+2. **Seguridad**: Proporcionar control de acceso seguro basado en RFID con registro completo
+3. **Monitoreo**: Monitoreo en tiempo real de condiciones ambientales
+4. **Accesibilidad**: Interfaz web amigable para monitoreo y control remoto
+5. **Escalabilidad**: Diseño modular que soporta múltiples habitaciones y sensores
+6. **Confiabilidad**: Comunicación robusta basada en MQTT para actualizaciones en tiempo real
 
-### Components Overview
+---
 
-| Component | Technology | Description |
-|-----------|------------|-------------|
-| **Sensors/Actuators** | ESP8266 (NodeMCU) | Microcontrollers with sensors and actuators |
-| **Backend API** | Node.js + Express + TypeScript | REST API server handling data persistence and business logic |
-| **Database** | MongoDB | Document database for storing sensor data, users, and logs |
-| **MQTT Broker** | Mosquitto (or similar) | Message broker for real-time device communication |
-| **Frontend** | React + TypeScript + Vite | Web-based dashboard and control interface |
+## Arquitectura de Alto Nivel
 
-### Component Interactions
+El sistema SmartRoom consiste en los siguientes componentes principales:
+
+### Resumen de Componentes
+
+| Componente | Tecnología | Descripción |
+|------------|------------|-------------|
+| **Sensores/Actuadores** | ESP8266 (NodeMCU) | Microcontroladores con sensores y actuadores |
+| **API Backend** | Node.js + Express + TypeScript | Servidor API REST que maneja persistencia de datos y lógica de negocio |
+| **Base de Datos** | MongoDB | Base de datos documental para almacenar datos de sensores, usuarios y logs |
+| **Broker MQTT** | Mosquitto (o similar) | Broker de mensajes para comunicación en tiempo real con dispositivos |
+| **Frontend** | React + TypeScript + Vite | Panel de control web e interfaz de control |
+
+### Interacciones de Componentes
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                              SmartRoom System                                │
+│                            Sistema SmartRoom                                 │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │                                                                             │
 │  ┌──────────────────┐              ┌──────────────────┐                    │
 │  │   ESP8266-A      │              │   ESP8266-B      │                    │
-│  │   (Access)       │              │   (Environment)  │                    │
-│  │  - RFID Reader   │              │  - DHT11 Sensor  │                    │
-│  │  - Servo (Door)  │              │  - LDR Sensor    │                    │
-│  │  - Ultrasonic    │              │  - PIR Motion    │                    │
-│  │  - LED Alarm     │              │  - Servo (Window)│                    │
+│  │   (Acceso)       │              │   (Ambiente)     │                    │
+│  │  - Lector RFID   │              │  - Sensor DHT11  │                    │
+│  │  - Servo (Puerta)│              │  - Sensor LDR    │                    │
+│  │  - Ultrasónico   │              │  - PIR Movim.    │                    │
+│  │  - LED Alarma    │              │  - Servo (Vent.) │                    │
 │  └────────┬─────────┘              └────────┬─────────┘                    │
 │           │                                 │                               │
 │           │  HTTP POST / MQTT               │  HTTP POST / MQTT            │
 │           │                                 │                               │
 │           ▼                                 ▼                               │
 │  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                         MQTT Broker (Mosquitto)                       │  │
-│  │                    Topic-based pub/sub messaging                      │  │
-│  └──────────────────────────────────────┬───────────────────────────────┘  │
-│                                         │                                   │
-│                                         ▼                                   │
-│  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                    Backend API (Node.js + Express)                    │  │
-│  │    REST Endpoints: /api/sensors, /api/devices, /api/users, etc.      │  │
+│  │                       Broker MQTT (Mosquitto)                         │  │
+│  │                   Mensajería pub/sub basada en topics                 │  │
 │  └──────────────────────────────────┬───────────────────────────────────┘  │
 │                                     │                                       │
 │                                     ▼                                       │
 │  ┌──────────────────────────────────────────────────────────────────────┐  │
-│  │                         MongoDB Database                              │  │
-│  │   Collections: sensors, devices, users, access_logs, alerts          │  │
+│  │                   API Backend (Node.js + Express)                     │  │
+│  │    Endpoints REST: /api/sensors, /api/devices, /api/users, etc.      │  │
+│  └──────────────────────────────────┬───────────────────────────────────┘  │
+│                                     │                                       │
+│                                     ▼                                       │
+│  ┌──────────────────────────────────────────────────────────────────────┐  │
+│  │                       Base de Datos MongoDB                           │  │
+│  │   Colecciones: sensors, devices, users, access_logs, alerts          │  │
 │  └──────────────────────────────────────────────────────────────────────┘  │
 │                                     ▲                                       │
 │                                     │                                       │
 │  ┌──────────────────────────────────────────────────────────────────────┐  │
 │  │                   Frontend (React + Vite + Tailwind)                  │  │
-│  │        Dashboard | Controls | Access Logs | Events/Alerts            │  │
+│  │        Dashboard | Controles | Logs de Acceso | Eventos/Alertas      │  │
 │  └──────────────────────────────────────────────────────────────────────┘  │
 │                                                                             │
 └─────────────────────────────────────────────────────────────────────────────┘
@@ -108,129 +108,130 @@ The SmartRoom system consists of the following major components:
 
 ---
 
-## Data Flow
+## Flujo de Datos
 
-### Sensor Data Flow
+### Flujo de Datos de Sensores
 
-1. **ESP8266 sensors** read environmental data (temperature, humidity, light, motion)
-2. **HTTP POST** sends sensor readings to backend `/api/sensors` endpoint
-3. **Backend** validates and stores data in MongoDB `sensors` collection
-4. **Frontend** polls or fetches sensor data to display on dashboard
+1. **Sensores ESP8266** leen datos ambientales (temperatura, humedad, luz, movimiento)
+2. **HTTP POST** envía lecturas de sensores al endpoint `/api/sensors` del backend
+3. **Backend** valida y almacena datos en la colección `sensors` de MongoDB
+4. **Frontend** consulta o obtiene datos de sensores para mostrar en el dashboard
 
-### Access Control Flow
+### Flujo de Control de Acceso
 
-1. **RFID card** is scanned at ESP8266-A reader
-2. **ESP8266** checks UID against allowed list (synced via MQTT)
-3. **Door servo** opens if authorized; LED alarm blinks if unauthorized
-4. **HTTP POST** logs access attempt to backend `/api/logs` endpoint
-5. **Frontend** displays access logs in real-time
+1. **Tarjeta RFID** es escaneada en el lector ESP8266-A
+2. **ESP8266** verifica UID contra la lista permitida (sincronizada vía MQTT)
+3. **Servo de puerta** abre si está autorizado; LED de alarma parpadea si no está autorizado
+4. **HTTP POST** registra intento de acceso al endpoint `/api/logs` del backend
+5. **Frontend** muestra logs de acceso en tiempo real
 
-### Device Control Flow
+### Flujo de Control de Dispositivos
 
-1. **User** clicks control button on frontend dashboard
-2. **Frontend** sends PATCH request to backend `/api/devices/{type}`
-3. **Backend** publishes command to MQTT topic
-4. **ESP8266** subscribes to topic and executes command (e.g., toggle LED, open window)
-5. **Backend** updates device state in MongoDB
+1. **Usuario** hace clic en botón de control en el dashboard del frontend
+2. **Frontend** envía petición PATCH al backend `/api/devices/{tipo}`
+3. **Backend** publica comando al topic MQTT
+4. **ESP8266** se suscribe al topic y ejecuta comando (ej., toggle LED, abrir ventana)
+5. **Backend** actualiza estado del dispositivo en MongoDB
 
-### Alert Flow
+### Flujo de Alertas
 
-1. **ESP8266** detects anomaly (e.g., prolonged presence without valid RFID)
-2. **HTTP POST** sends alert to backend `/api/alerts` endpoint
-3. **Backend** stores alert in MongoDB `alerts` collection
-4. **Frontend** displays alert notification to user
+1. **ESP8266** detecta anomalía (ej., presencia prolongada sin RFID válido)
+2. **HTTP POST** envía alerta al endpoint `/api/alerts` del backend
+3. **Backend** almacena alerta en la colección `alerts` de MongoDB
+4. **Frontend** muestra notificación de alerta al usuario
 
 ---
 
-## Hardware Components
+## Componentes de Hardware
 
-### Recommended Hardware
+### Hardware Recomendado
 
-| Component | Model | Purpose |
-|-----------|-------|---------|
-| Microcontroller | ESP8266 NodeMCU v2 | WiFi-enabled microcontroller |
-| Temperature/Humidity | DHT11 | Environmental monitoring |
-| Light Sensor | LDR (Photoresistor) | Light level detection |
-| Motion Sensor | HC-SR501 PIR | Motion detection |
-| RFID Reader | MFRC522 | Access card reading |
-| Ultrasonic Sensor | HC-SR04 | Proximity/presence detection |
-| Servo Motor | SG90 9G | Door/window actuation |
-| LED | Standard 5mm LED | Status indicators |
+| Componente | Modelo | Propósito |
+|------------|--------|-----------|
+| Microcontrolador | ESP8266 NodeMCU v2 | Microcontrolador con WiFi |
+| Temperatura/Humedad | DHT11 | Monitoreo ambiental |
+| Sensor de Luz | LDR (Fotorresistor) | Detección de nivel de luz |
+| Sensor de Movimiento | HC-SR501 PIR | Detección de movimiento |
+| Lector RFID | MFRC522 | Lectura de tarjetas de acceso |
+| Sensor Ultrasónico | HC-SR04 | Detección de proximidad/presencia |
+| Servomotor | SG90 9G | Actuación de puerta/ventana |
+| LED | LED estándar 5mm | Indicadores de estado |
 
-### ESP8266-A Wiring (Access Control)
+### Conexiones ESP8266-A (Control de Acceso)
 
-| Component | Pin | GPIO |
-|-----------|-----|------|
+| Componente | Pin | GPIO |
+|------------|-----|------|
 | RFID SDA/SS | D2 | GPIO4 |
 | RFID RST | D1 | GPIO5 |
 | RFID SCK | D5 | GPIO14 |
 | RFID MISO | D6 | GPIO12 |
 | RFID MOSI | D7 | GPIO13 |
-| Servo Door | D4 | GPIO2 |
-| Ultrasonic TRIG | D0 | GPIO16 |
-| Ultrasonic ECHO | D8 | GPIO15 |
-| LED Alarm | D3 | GPIO0 |
+| Servo Puerta | D4 | GPIO2 |
+| Ultrasónico TRIG | D0 | GPIO16 |
+| Ultrasónico ECHO | D8 | GPIO15 |
+| LED Alarma | D3 | GPIO0 |
 
-### ESP8266-B Wiring (Environmental)
+### Conexiones ESP8266-B (Ambiental)
 
-| Component | Pin | GPIO |
-|-----------|-----|------|
+| Componente | Pin | GPIO |
+|------------|-----|------|
 | DHT11 DATA | D4 | GPIO2 |
-| Servo Window | D5 | GPIO14 |
+| Servo Ventana | D5 | GPIO14 |
 | LDR | A0 | ADC |
-| LED Light | D6 | GPIO12 |
+| LED Luz | D6 | GPIO12 |
 | PIR | D1 | GPIO5 |
 
-### Power Requirements
+### Requisitos de Alimentación
 
-- ESP8266: 3.3V logic (5V USB power)
-- Servos: 5V (separate power supply recommended for multiple servos)
-- Sensors: 3.3V-5V compatible
+- ESP8266: Lógica 3.3V (alimentación USB 5V)
+- Servos: 5V (se recomienda fuente de alimentación separada para múltiples servos)
+- Sensores: Compatibles con 3.3V-5V
 
 ---
 
-## Software Stack
+## Stack de Software
 
 ### Backend
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| Node.js | 18+ | Runtime environment |
-| Express | 5.x | HTTP server framework |
-| TypeScript | 5.x | Type-safe JavaScript |
-| Mongoose | 8.x | MongoDB ODM |
-| MQTT.js | 5.x | MQTT client library |
-| dotenv | 17.x | Environment configuration |
-| cors | 2.x | Cross-origin resource sharing |
-| nodemon | 3.x | Development hot-reload |
+| Paquete | Versión | Propósito |
+|---------|---------|-----------|
+| Node.js | 18+ | Entorno de ejecución |
+| Express | 5.x | Framework de servidor HTTP |
+| TypeScript | 5.x | JavaScript con tipado |
+| Mongoose | 8.x | ODM para MongoDB |
+| MQTT.js | 5.x | Librería cliente MQTT |
+| dotenv | 17.x | Configuración de entorno |
+| cors | 2.x | Compartición de recursos entre orígenes |
+| nodemon | 3.x | Hot-reload en desarrollo |
 
 ### Frontend
 
-| Package | Version | Purpose |
-|---------|---------|---------|
-| React | 19.x | UI library |
-| Vite | 7.x | Build tool and dev server |
-| TypeScript | 5.x | Type-safe JavaScript |
-| Tailwind CSS | 3.x | Utility-first CSS framework |
-| React Router | 7.x | Client-side routing |
-| Recharts | 3.x | Data visualization |
-| Lucide React | 0.x | Icon library |
+| Paquete | Versión | Propósito |
+|---------|---------|-----------|
+| React | 19.x | Librería de UI |
+| Vite | 7.x | Herramienta de build y servidor dev |
+| TypeScript | 5.x | JavaScript con tipado |
+| Tailwind CSS | 3.x | Framework CSS utility-first |
+| React Router | 7.x | Enrutamiento del lado del cliente |
+| Recharts | 3.x | Visualización de datos |
+| Lucide React | 0.x | Librería de íconos |
+| React Hot Toast | 2.x | Notificaciones toast |
 
 ### Firmware (PlatformIO)
 
-| Library | Version | Purpose |
-|---------|---------|---------|
-| PubSubClient | 2.8 | MQTT client for Arduino |
-| ArduinoJson | 7.4.2 | JSON parsing/serialization |
-| DHT sensor library | 1.4.6 | DHT11/DHT22 sensor support |
-| MFRC522 | 1.3.6 | RFID reader library |
-| Adafruit Unified Sensor | 1.1.15 | Sensor abstraction layer |
+| Librería | Versión | Propósito |
+|----------|---------|-----------|
+| PubSubClient | 2.8 | Cliente MQTT para Arduino |
+| ArduinoJson | 7.4.2 | Parseo/serialización JSON |
+| DHT sensor library | 1.4.6 | Soporte para sensor DHT11/DHT22 |
+| MFRC522 | 1.3.6 | Librería de lector RFID |
+| Adafruit Unified Sensor | 1.1.15 | Capa de abstracción de sensores |
 
 ---
 
-## Data Models
+## Modelos de Datos
 
-### Sensor Reading
+### Lectura de Sensor
 
 ```json
 {
@@ -245,7 +246,7 @@ The SmartRoom system consists of the following major components:
 }
 ```
 
-### Device State
+### Estado de Dispositivo
 
 ```json
 {
@@ -267,13 +268,13 @@ The SmartRoom system consists of the following major components:
 }
 ```
 
-### User
+### Usuario
 
 ```json
 {
   "_id": "ObjectId",
-  "name": "John Doe",
-  "email": "john.doe@example.com",
+  "name": "Juan Pérez",
+  "email": "juan.perez@ejemplo.com",
   "rfid_uid": "A3299BF4",
   "role": "user",
   "active": true,
@@ -282,7 +283,7 @@ The SmartRoom system consists of the following major components:
 }
 ```
 
-### Access Log
+### Log de Acceso
 
 ```json
 {
@@ -296,13 +297,13 @@ The SmartRoom system consists of the following major components:
 }
 ```
 
-### Alert
+### Alerta
 
 ```json
 {
   "_id": "ObjectId",
   "type": "unauthorized_presence",
-  "description": "Presence >30s without valid RFID",
+  "description": "Presencia >30s sin RFID válido",
   "duration_ms": 30000,
   "timestamp": "2025-01-15T10:30:00.000Z",
   "resolved": false,
@@ -312,115 +313,115 @@ The SmartRoom system consists of the following major components:
 
 ---
 
-## API Contract
+## Contrato de API
 
-Base URL: `http://localhost:3000/api`
+URL Base: `http://localhost:3000/api`
 
-### Sensors
+### Sensores
 
-| Method | Endpoint | Description |
+| Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| GET | `/sensors` | Get all sensor readings |
-| GET | `/sensors/:id` | Get sensor reading by ID |
-| POST | `/sensors` | Create new sensor reading |
-| PUT | `/sensors/:id` | Update sensor reading |
-| DELETE | `/sensors/:id` | Delete sensor reading |
+| GET | `/sensors` | Obtener todas las lecturas de sensores |
+| GET | `/sensors/:id` | Obtener lectura de sensor por ID |
+| POST | `/sensors` | Crear nueva lectura de sensor |
+| PUT | `/sensors/:id` | Actualizar lectura de sensor |
+| DELETE | `/sensors/:id` | Eliminar lectura de sensor |
 
-### Devices
+### Dispositivos
 
-| Method | Endpoint | Description |
+| Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| GET | `/devices` | Get all devices state |
-| PATCH | `/devices/available` | Toggle manual control mode |
-| PATCH | `/devices/door` | Update door state |
-| PATCH | `/devices/window` | Update window state |
-| PATCH | `/devices/lights` | Update lights state |
+| GET | `/devices` | Obtener estado de todos los dispositivos |
+| PATCH | `/devices/available` | Alternar modo de control manual |
+| PATCH | `/devices/door` | Actualizar estado de puerta |
+| PATCH | `/devices/window` | Actualizar estado de ventana |
+| PATCH | `/devices/lights` | Actualizar estado de luces |
 
-### Users
+### Usuarios
 
-| Method | Endpoint | Description |
+| Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| GET | `/users` | Get all users |
-| GET | `/users/allowed` | Get all allowed RFID UIDs |
-| GET | `/users/:id` | Get user by ID |
-| POST | `/users` | Create new user |
-| PUT | `/users/:id` | Update user |
-| DELETE | `/users/:id` | Delete user |
+| GET | `/users` | Obtener todos los usuarios |
+| GET | `/users/allowed` | Obtener todos los UIDs RFID permitidos |
+| GET | `/users/:id` | Obtener usuario por ID |
+| POST | `/users` | Crear nuevo usuario |
+| PUT | `/users/:id` | Actualizar usuario |
+| DELETE | `/users/:id` | Eliminar usuario |
 
-### Access Logs
+### Logs de Acceso
 
-| Method | Endpoint | Description |
+| Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| GET | `/logs` | Get all access logs |
-| GET | `/logs/:id` | Get access log by ID |
-| POST | `/logs` | Create new access log |
-| PUT | `/logs/:id` | Update access log |
-| DELETE | `/logs/:id` | Delete access log |
+| GET | `/logs` | Obtener todos los logs de acceso |
+| GET | `/logs/:id` | Obtener log de acceso por ID |
+| POST | `/logs` | Crear nuevo log de acceso |
+| PUT | `/logs/:id` | Actualizar log de acceso |
+| DELETE | `/logs/:id` | Eliminar log de acceso |
 
-### Alerts
+### Alertas
 
-| Method | Endpoint | Description |
+| Método | Endpoint | Descripción |
 |--------|----------|-------------|
-| GET | `/alerts` | Get all alerts |
-| GET | `/alerts/:id` | Get alert by ID |
-| POST | `/alerts` | Create new alert |
-| PUT | `/alerts/:id` | Update alert |
-| DELETE | `/alerts/:id` | Delete alert |
+| GET | `/alerts` | Obtener todas las alertas |
+| GET | `/alerts/:id` | Obtener alerta por ID |
+| POST | `/alerts` | Crear nueva alerta |
+| PUT | `/alerts/:id` | Actualizar alerta |
+| DELETE | `/alerts/:id` | Eliminar alerta |
 
-For detailed API reference with request/response examples, see [API.md](./API.md).
+Para referencia detallada de la API con ejemplos de petición/respuesta, ver [API.md](./API.md).
 
 ---
 
-## Configuration
+## Configuración
 
-### Environment Variables
+### Variables de Entorno
 
-Create a `.env` file in the `backend/` directory:
+Crear un archivo `.env` en el directorio `backend/`:
 
 ```env
-# Server Configuration
+# Configuración del Servidor
 PORT=3000
 NODE_ENV=development
 
-# MongoDB Connection
+# Conexión MongoDB
 MONGO_URI=mongodb://localhost:27017/smartroom
 
-# MQTT Configuration (configure in mqtt_client.ts)
+# Configuración MQTT (configurar en mqtt_client.ts)
 # MQTT_HOST=mqtt://192.168.1.35
-# MQTT_USER=your_username
-# MQTT_PASSWORD=your_password
+# MQTT_USER=tu_usuario
+# MQTT_PASSWORD=tu_contraseña
 ```
 
-### MQTT Topics
+### Topics MQTT
 
-| Topic | Direction | Description |
+| Topic | Dirección | Descripción |
 |-------|-----------|-------------|
-| `rfid/allowed/update` | Backend → ESP | List of allowed RFID UIDs |
-| `room/control/lights` | Backend → ESP | Light control commands |
-| `room/control/window` | Backend → ESP | Window control commands |
-| `room/control/door` | Backend → ESP | Door control commands |
-| `room/control/manual` | Backend → ESP | Manual override toggle |
+| `rfid/allowed/update` | Backend → ESP | Lista de UIDs RFID permitidos |
+| `room/control/lights` | Backend → ESP | Comandos de control de luz |
+| `room/control/window` | Backend → ESP | Comandos de control de ventana |
+| `room/control/door` | Backend → ESP | Comandos de control de puerta |
+| `room/control/manual` | Backend → ESP | Toggle de modo manual |
 
 ---
 
-## Deployment
+## Despliegue
 
-### Local Development
+### Desarrollo Local
 
-See [SETUP.md](./SETUP.md) for detailed local development setup instructions.
+Ver [SETUP.md](./SETUP.md) para instrucciones detalladas de configuración de desarrollo local.
 
-### Production Deployment
+### Despliegue en Producción
 
 #### Backend (Node.js)
 
-1. **Build the application**:
+1. **Compilar la aplicación**:
    ```bash
    cd backend
    npm install
    npm run build
    ```
 
-2. **Using systemd service**:
+2. **Usando servicio systemd**:
    ```ini
    # /etc/systemd/system/smartroom-backend.service
    [Unit]
@@ -441,7 +442,7 @@ See [SETUP.md](./SETUP.md) for detailed local development setup instructions.
    WantedBy=multi-user.target
    ```
 
-3. **Using Docker**:
+3. **Usando Docker**:
    ```dockerfile
    FROM node:18-alpine
    WORKDIR /app
@@ -452,20 +453,20 @@ See [SETUP.md](./SETUP.md) for detailed local development setup instructions.
    CMD ["node", "dist/server.js"]
    ```
 
-#### Frontend (Static Build)
+#### Frontend (Build Estático)
 
-1. **Build the application**:
+1. **Compilar la aplicación**:
    ```bash
    cd frontend
    npm install
    npm run build
    ```
 
-2. **Serve with nginx**:
+2. **Servir con nginx**:
    ```nginx
    server {
        listen 80;
-       server_name smartroom.example.com;
+       server_name smartroom.ejemplo.com;
 
        root /var/www/smartroom/frontend/dist;
        index index.html;
@@ -485,7 +486,7 @@ See [SETUP.md](./SETUP.md) for detailed local development setup instructions.
    }
    ```
 
-#### MQTT Broker (Mosquitto)
+#### Broker MQTT (Mosquitto)
 
 ```yaml
 # docker-compose.yml
@@ -501,31 +502,31 @@ services:
       - ./mosquitto/log:/mosquitto/log
 ```
 
-#### Firmware Deployment
+#### Despliegue de Firmware
 
-1. Open PlatformIO IDE or VS Code with PlatformIO extension
-2. Connect ESP8266 via USB
-3. Update WiFi credentials and backend URL in source code
-4. Build and upload:
+1. Abrir PlatformIO IDE o VS Code con extensión PlatformIO
+2. Conectar ESP8266 vía USB
+3. Actualizar credenciales WiFi y URL del backend en el código fuente
+4. Compilar y cargar:
    ```bash
-   cd SmartRoom_IO  # or SmartRoom_IO_2
+   cd SmartRoom_IO  # o SmartRoom_IO_2
    pio run --target upload
    ```
 
 ---
 
-## Testing Strategy
+## Estrategia de Pruebas
 
-### Backend Testing
+### Pruebas de Backend
 
-Currently, the backend does not have automated tests configured. To add testing:
+Actualmente, el backend no tiene pruebas automatizadas configuradas. Para agregar pruebas:
 
-1. **Install test dependencies**:
+1. **Instalar dependencias de prueba**:
    ```bash
    npm install --save-dev jest @types/jest ts-jest supertest @types/supertest
    ```
 
-2. **Add test script to package.json**:
+2. **Agregar script de prueba a package.json**:
    ```json
    {
      "scripts": {
@@ -534,168 +535,168 @@ Currently, the backend does not have automated tests configured. To add testing:
    }
    ```
 
-3. **Example unit test**:
+3. **Ejemplo de prueba unitaria**:
    ```typescript
    // src/__tests__/sensors.test.ts
    import request from 'supertest';
    import app from '../app';
 
-   describe('Sensors API', () => {
-     it('GET /api/sensors should return sensor data', async () => {
+   describe('API de Sensores', () => {
+     it('GET /api/sensors debería retornar datos de sensores', async () => {
        const res = await request(app).get('/api/sensors');
        expect(res.statusCode).toBe(200);
      });
    });
    ```
 
-### Frontend Testing
+### Pruebas de Frontend
 
-1. **Install test dependencies**:
+1. **Instalar dependencias de prueba**:
    ```bash
    npm install --save-dev vitest @testing-library/react @testing-library/jest-dom
    ```
 
-2. **Run tests**:
+2. **Ejecutar pruebas**:
    ```bash
    npm run test
    ```
 
-### Integration Testing
+### Pruebas de Integración
 
-1. Use tools like Postman or curl to test API endpoints
-2. Monitor MQTT messages with MQTT Explorer
-3. Verify sensor data flow from ESP8266 to database
+1. Usar herramientas como Postman o curl para probar endpoints de la API
+2. Monitorear mensajes MQTT con MQTT Explorer
+3. Verificar flujo de datos de sensores desde ESP8266 a la base de datos
 
-### Hardware Testing
+### Pruebas de Hardware
 
-1. Use Serial Monitor (115200 baud) for debugging ESP8266
-2. Test RFID reader with known cards
-3. Verify servo range of motion
-4. Test sensor readings with multimeter
-
----
-
-## Security Considerations
-
-### Network Security
-
-- **Network Segmentation**: Keep IoT devices on a separate VLAN
-- **Firewall Rules**: Restrict inbound connections to necessary ports only
-- **TLS/SSL**: Use HTTPS for frontend and API in production
-- **MQTT Security**: Enable authentication and TLS for MQTT broker
-
-### Authentication & Authorization
-
-- Currently, the API does not implement authentication
-- For production, consider adding:
-  - JWT-based authentication for API endpoints
-  - Role-based access control (admin, user, guest roles exist in model)
-  - API rate limiting
-
-### Secrets Management
-
-- **Never commit credentials** to version control
-- Use environment variables for sensitive configuration
-- For production, use a secrets manager (HashiCorp Vault, AWS Secrets Manager)
-- Rotate MQTT and database credentials regularly
-
-### Firmware Security
-
-- Update WiFi credentials before deployment
-- Consider using secure boot on ESP8266/ESP32
-- Validate and sanitize RFID UID input
-- Implement watchdog timer for reliability
-
-### Database Security
-
-- Use MongoDB authentication in production
-- Enable network encryption for MongoDB connections
-- Regular database backups
-- Limit database user permissions
+1. Usar Monitor Serial (115200 baud) para depurar ESP8266
+2. Probar lector RFID con tarjetas conocidas
+3. Verificar rango de movimiento del servo
+4. Probar lecturas de sensores con multímetro
 
 ---
 
-## Troubleshooting
+## Consideraciones de Seguridad
 
-### Common Issues
+### Seguridad de Red
 
-#### ESP8266 Not Connecting to WiFi
+- **Segmentación de Red**: Mantener dispositivos IoT en una VLAN separada
+- **Reglas de Firewall**: Restringir conexiones entrantes solo a puertos necesarios
+- **TLS/SSL**: Usar HTTPS para frontend y API en producción
+- **Seguridad MQTT**: Habilitar autenticación y TLS para broker MQTT
 
-1. Verify WiFi credentials in firmware
-2. Check WiFi signal strength
-3. Ensure router supports 2.4GHz (ESP8266 doesn't support 5GHz)
-4. Try resetting the ESP8266
+### Autenticación y Autorización
 
-#### MQTT Connection Failed
+- Actualmente, la API no implementa autenticación
+- Para producción, considerar agregar:
+  - Autenticación basada en JWT para endpoints de API
+  - Control de acceso basado en roles (roles admin, user, guest existen en el modelo)
+  - Limitación de tasa de API
 
-1. Verify MQTT broker is running
-2. Check broker IP address and port
-3. Verify MQTT credentials
-4. Check firewall rules for port 1883
+### Gestión de Secretos
 
-#### Backend Not Starting
+- **Nunca commitear credenciales** al control de versiones
+- Usar variables de entorno para configuración sensible
+- Para producción, usar un gestor de secretos (HashiCorp Vault, AWS Secrets Manager)
+- Rotar credenciales de MQTT y base de datos regularmente
 
-1. Check if MongoDB is running
-2. Verify `MONGO_URI` environment variable
-3. Check for port conflicts (default: 3000)
-4. Review console logs for errors
+### Seguridad de Firmware
 
-#### Sensor Readings Not Appearing
+- Actualizar credenciales WiFi antes del despliegue
+- Considerar usar secure boot en ESP8266/ESP32
+- Validar y sanitizar entrada de UID RFID
+- Implementar watchdog timer para confiabilidad
 
-1. Check serial monitor for ESP8266 output
-2. Verify HTTP POST URL is correct
-3. Ensure backend CORS is configured
-4. Check MongoDB connection
+### Seguridad de Base de Datos
 
-#### RFID Not Reading Cards
+- Usar autenticación de MongoDB en producción
+- Habilitar cifrado de red para conexiones MongoDB
+- Respaldos regulares de base de datos
+- Limitar permisos de usuario de base de datos
 
-1. Verify SPI wiring (SCK, MISO, MOSI, SS)
-2. Check RFID module power supply
-3. Test with known working cards
-4. Check serial output for version register
+---
 
-#### Servo Not Moving
+## Solución de Problemas
 
-1. Verify servo power supply (5V separate from ESP)
-2. Check signal wire connection
-3. Test servo with different PWM values
-4. Ensure servo is not mechanically blocked
+### Problemas Comunes
 
-### Debug Commands
+#### ESP8266 No Conecta a WiFi
+
+1. Verificar credenciales WiFi en firmware
+2. Verificar intensidad de señal WiFi
+3. Asegurar que el router soporte 2.4GHz (ESP8266 no soporta 5GHz)
+4. Intentar resetear el ESP8266
+
+#### Conexión MQTT Fallida
+
+1. Verificar que el broker MQTT esté corriendo
+2. Verificar dirección IP y puerto del broker
+3. Verificar credenciales MQTT
+4. Verificar reglas de firewall para puerto 1883
+
+#### Backend No Inicia
+
+1. Verificar si MongoDB está corriendo
+2. Verificar variable de entorno `MONGO_URI`
+3. Verificar conflictos de puerto (por defecto: 3000)
+4. Revisar logs de consola para errores
+
+#### Lecturas de Sensores No Aparecen
+
+1. Verificar salida del monitor serial de ESP8266
+2. Verificar que la URL de HTTP POST sea correcta
+3. Asegurar que CORS del backend esté configurado
+4. Verificar conexión a MongoDB
+
+#### RFID No Lee Tarjetas
+
+1. Verificar conexionado SPI (SCK, MISO, MOSI, SS)
+2. Verificar alimentación del módulo RFID
+3. Probar con tarjetas conocidas que funcionen
+4. Verificar salida serial para registro de versión
+
+#### Servo No Se Mueve
+
+1. Verificar alimentación del servo (5V separada del ESP)
+2. Verificar conexión del cable de señal
+3. Probar servo con diferentes valores de PWM
+4. Asegurar que el servo no esté bloqueado mecánicamente
+
+### Comandos de Depuración
 
 ```bash
-# Check MongoDB status
+# Verificar estado de MongoDB
 mongosh --eval "db.serverStatus()"
 
-# Check backend logs
+# Verificar logs del backend
 journalctl -u smartroom-backend -f
 
-# Test MQTT connection
+# Probar conexión MQTT
 mosquitto_sub -h localhost -t "#" -v
 
-# Test API endpoint
+# Probar endpoint de API
 curl http://localhost:3000/api/sensors
 ```
 
-### Log Locations
+### Ubicaciones de Logs
 
-| Component | Log Location |
-|-----------|--------------|
-| Backend | Console (stdout) / journalctl |
+| Componente | Ubicación del Log |
+|------------|-------------------|
+| Backend | Consola (stdout) / journalctl |
 | MongoDB | `/var/log/mongodb/` |
 | MQTT | `/var/log/mosquitto/` |
-| ESP8266 | Serial Monitor (115200 baud) |
+| ESP8266 | Monitor Serial (115200 baud) |
 
 ---
 
-## Additional Resources
+## Recursos Adicionales
 
-- [Setup Guide](./SETUP.md) - Development environment setup
-- [API Reference](./API.md) - Detailed API documentation
-- [Architecture](./ARCHITECTURE.md) - System architecture diagrams
-- [Contributing](./CONTRIBUTING.md) - Contribution guidelines
-- [Changelog](./CHANGELOG.md) - Version history
+- [Guía de Configuración](./SETUP.md) - Configuración del entorno de desarrollo
+- [Referencia de API](./API.md) - Documentación detallada de la API
+- [Arquitectura](./ARCHITECTURE.md) - Diagramas de arquitectura del sistema
+- [Contribución](./CONTRIBUTING.md) - Guías de contribución
+- [Changelog](./CHANGELOG.md) - Historial de versiones
 
 ---
 
-*Last updated: December 2024*
+*Última actualización: Diciembre 2024*

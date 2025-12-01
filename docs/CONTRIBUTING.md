@@ -1,171 +1,171 @@
-# Contributing to SmartRoom
+# Contribuir a SmartRoom
 
-Thank you for your interest in contributing to SmartRoom! This document provides guidelines and instructions for contributing to the project.
+¡Gracias por tu interés en contribuir a SmartRoom! Este documento proporciona guías e instrucciones para contribuir al proyecto.
 
-## Table of Contents
+## Tabla de Contenidos
 
-- [Code of Conduct](#code-of-conduct)
-- [Getting Started](#getting-started)
-- [How to Contribute](#how-to-contribute)
-- [Development Workflow](#development-workflow)
-- [Coding Standards](#coding-standards)
-- [Commit Messages](#commit-messages)
-- [Pull Request Process](#pull-request-process)
-- [Issue Guidelines](#issue-guidelines)
-- [Testing](#testing)
-- [Documentation](#documentation)
-
----
-
-## Code of Conduct
-
-By participating in this project, you agree to maintain a respectful and inclusive environment for all contributors. Please:
-
-- Be respectful and considerate in your communications
-- Welcome newcomers and help them get started
-- Focus on constructive feedback
-- Accept responsibility for your mistakes and learn from them
+- [Código de Conducta](#código-de-conducta)
+- [Primeros Pasos](#primeros-pasos)
+- [Cómo Contribuir](#cómo-contribuir)
+- [Flujo de Trabajo de Desarrollo](#flujo-de-trabajo-de-desarrollo)
+- [Estándares de Código](#estándares-de-código)
+- [Mensajes de Commit](#mensajes-de-commit)
+- [Proceso de Pull Request](#proceso-de-pull-request)
+- [Guías para Issues](#guías-para-issues)
+- [Pruebas](#pruebas)
+- [Documentación](#documentación)
 
 ---
 
-## Getting Started
+## Código de Conducta
 
-### Prerequisites
+Al participar en este proyecto, aceptas mantener un ambiente respetuoso e inclusivo para todos los contribuidores. Por favor:
 
-Before contributing, ensure you have:
+- Sé respetuoso y considerado en tus comunicaciones
+- Da la bienvenida a los nuevos y ayúdalos a empezar
+- Enfócate en retroalimentación constructiva
+- Acepta la responsabilidad de tus errores y aprende de ellos
 
-1. Read the [README.md](../README.md) for project overview
-2. Set up your development environment following [SETUP.md](./SETUP.md)
-3. Understood the [ARCHITECTURE.md](./ARCHITECTURE.md) and [TECHNICAL.md](./TECHNICAL.md)
+---
 
-### Fork and Clone
+## Primeros Pasos
 
-1. Fork the repository on GitHub
-2. Clone your fork locally:
+### Prerrequisitos
+
+Antes de contribuir, asegúrate de tener:
+
+1. Leído el [README.md](../README.md) para visión general del proyecto
+2. Configurado tu entorno de desarrollo siguiendo [SETUP.md](./SETUP.md)
+3. Entendido la [ARCHITECTURE.md](./ARCHITECTURE.md) y [TECHNICAL.md](./TECHNICAL.md)
+
+### Fork y Clonar
+
+1. Hacer fork del repositorio en GitHub
+2. Clonar tu fork localmente:
    ```bash
-   git clone https://github.com/YOUR_USERNAME/SmartRoom.git
+   git clone https://github.com/TU_USUARIO/SmartRoom.git
    cd SmartRoom
    ```
-3. Add upstream remote:
+3. Agregar remote upstream:
    ```bash
    git remote add upstream https://github.com/GerardoMejia1107/SmartRoom.git
    ```
 
 ---
 
-## How to Contribute
+## Cómo Contribuir
 
-### Types of Contributions
+### Tipos de Contribuciones
 
-We welcome various types of contributions:
+Damos la bienvenida a varios tipos de contribuciones:
 
-- 🐛 **Bug fixes**: Fix issues and improve stability
-- ✨ **New features**: Add new functionality
-- 📚 **Documentation**: Improve or add documentation
-- 🧪 **Tests**: Add or improve test coverage
-- 🎨 **UI/UX**: Improve the user interface
-- ⚡ **Performance**: Optimize code and improve performance
-- 🔒 **Security**: Fix security vulnerabilities
+- 🐛 **Corrección de bugs**: Corregir problemas y mejorar la estabilidad
+- ✨ **Nuevas funcionalidades**: Agregar nueva funcionalidad
+- 📚 **Documentación**: Mejorar o agregar documentación
+- 🧪 **Pruebas**: Agregar o mejorar cobertura de pruebas
+- 🎨 **UI/UX**: Mejorar la interfaz de usuario
+- ⚡ **Rendimiento**: Optimizar código y mejorar rendimiento
+- 🔒 **Seguridad**: Corregir vulnerabilidades de seguridad
 
-### Finding Issues to Work On
+### Encontrar Issues para Trabajar
 
-- Check the [Issues](https://github.com/GerardoMejia1107/SmartRoom/issues) page
-- Look for issues labeled `good first issue` for beginners
-- Issues labeled `help wanted` need community assistance
-- Feel free to ask questions on any issue before starting work
+- Revisar la página de [Issues](https://github.com/GerardoMejia1107/SmartRoom/issues)
+- Buscar issues etiquetados con `good first issue` para principiantes
+- Issues etiquetados con `help wanted` necesitan asistencia de la comunidad
+- No dudes en hacer preguntas en cualquier issue antes de empezar a trabajar
 
 ---
 
-## Development Workflow
+## Flujo de Trabajo de Desarrollo
 
-### 1. Create a Branch
+### 1. Crear una Rama
 
-Create a descriptive branch for your work:
+Crear una rama descriptiva para tu trabajo:
 
 ```bash
-# Sync with upstream
+# Sincronizar con upstream
 git fetch upstream
 git checkout main
 git merge upstream/main
 
-# Create feature branch
-git checkout -b <type>/<description>
+# Crear rama de feature
+git checkout -b <tipo>/<descripcion>
 ```
 
-### Branch Naming Convention
+### Convención de Nombres de Ramas
 
-Use the following prefixes:
+Usar los siguientes prefijos:
 
-| Prefix | Description | Example |
-|--------|-------------|---------|
-| `feature/` | New feature | `feature/add-temperature-alerts` |
-| `fix/` | Bug fix | `fix/sensor-reading-null` |
-| `docs/` | Documentation | `docs/update-api-reference` |
-| `refactor/` | Code refactoring | `refactor/mqtt-client` |
-| `test/` | Adding tests | `test/user-controller` |
-| `chore/` | Maintenance tasks | `chore/update-dependencies` |
+| Prefijo | Descripción | Ejemplo |
+|---------|-------------|---------|
+| `feature/` | Nueva funcionalidad | `feature/agregar-alertas-temperatura` |
+| `fix/` | Corrección de bug | `fix/lectura-sensor-null` |
+| `docs/` | Documentación | `docs/actualizar-referencia-api` |
+| `refactor/` | Refactorización de código | `refactor/cliente-mqtt` |
+| `test/` | Agregar pruebas | `test/controlador-usuarios` |
+| `chore/` | Tareas de mantenimiento | `chore/actualizar-dependencias` |
 
-### 2. Make Your Changes
+### 2. Hacer tus Cambios
 
-- Write clean, readable code
-- Follow the existing code style
-- Add comments for complex logic
-- Update documentation if needed
+- Escribir código limpio y legible
+- Seguir el estilo de código existente
+- Agregar comentarios para lógica compleja
+- Actualizar documentación si es necesario
 
-### 3. Test Your Changes
+### 3. Probar tus Cambios
 
 ```bash
 # Backend
 cd backend
-npm run lint  # If configured
-npm test      # If tests exist
+npm run lint  # Si está configurado
+npm test      # Si existen pruebas
 
 # Frontend
 cd frontend
 npm run lint
-npm run build  # Ensure build succeeds
+npm run build  # Asegurar que el build tenga éxito
 ```
 
-### 4. Commit Your Changes
+### 4. Hacer Commit de tus Cambios
 
-Follow the commit message guidelines below.
+Seguir las guías de mensajes de commit abajo.
 
-### 5. Push and Create PR
+### 5. Hacer Push y Crear PR
 
 ```bash
-git push origin <your-branch-name>
+git push origin <nombre-de-tu-rama>
 ```
 
-Then create a Pull Request on GitHub.
+Luego crear un Pull Request en GitHub.
 
 ---
 
-## Coding Standards
+## Estándares de Código
 
 ### TypeScript/JavaScript
 
-- Use TypeScript for all new code
-- Follow existing code patterns
-- Use meaningful variable and function names
-- Prefer `const` over `let`; avoid `var`
-- Use async/await over callbacks or raw promises
-- Handle errors appropriately
+- Usar TypeScript para todo código nuevo
+- Seguir patrones de código existentes
+- Usar nombres significativos de variables y funciones
+- Preferir `const` sobre `let`; evitar `var`
+- Usar async/await sobre callbacks o promesas crudas
+- Manejar errores apropiadamente
 
-**Example:**
+**Ejemplo:**
 ```typescript
-// Good
-const fetchSensorData = async (sensorId: string): Promise<ISensor | null> => {
+// Bien
+const obtenerDatosSensor = async (sensorId: string): Promise<ISensor | null> => {
   try {
     const sensor = await Sensor.findById(sensorId);
     return sensor;
   } catch (error) {
-    console.error('Failed to fetch sensor:', error);
+    console.error('Error al obtener sensor:', error);
     return null;
   }
 };
 
-// Avoid
-function fetchSensorData(sensorId, callback) {
+// Evitar
+function obtenerDatosSensor(sensorId, callback) {
   Sensor.findById(sensorId, function(err, sensor) {
     callback(err, sensor);
   });
@@ -174,24 +174,24 @@ function fetchSensorData(sensorId, callback) {
 
 ### React/Frontend
 
-- Use functional components with hooks
-- Keep components small and focused
-- Use TypeScript interfaces for props
-- Extract reusable logic into custom hooks
+- Usar componentes funcionales con hooks
+- Mantener componentes pequeños y enfocados
+- Usar interfaces TypeScript para props
+- Extraer lógica reutilizable en hooks personalizados
 
-**Example:**
+**Ejemplo:**
 ```tsx
-interface SensorCardProps {
+interface TarjetaSensorProps {
   sensor: ISensor;
   onRefresh: () => void;
 }
 
-const SensorCard: React.FC<SensorCardProps> = ({ sensor, onRefresh }) => {
+const TarjetaSensor: React.FC<TarjetaSensorProps> = ({ sensor, onRefresh }) => {
   return (
     <div className="p-4 bg-white rounded-lg shadow">
       <h3>{sensor.source}</h3>
-      <p>Temperature: {sensor.temperature_c}°C</p>
-      <button onClick={onRefresh}>Refresh</button>
+      <p>Temperatura: {sensor.temperature_c}°C</p>
+      <button onClick={onRefresh}>Actualizar</button>
     </div>
   );
 };
@@ -199,199 +199,199 @@ const SensorCard: React.FC<SensorCardProps> = ({ sensor, onRefresh }) => {
 
 ### Arduino/C++
 
-- Use descriptive constant names
-- Comment complex logic
-- Follow existing formatting patterns
-- Avoid blocking operations in loop()
+- Usar nombres descriptivos de constantes
+- Comentar lógica compleja
+- Seguir patrones de formato existentes
+- Evitar operaciones bloqueantes en loop()
 
 ---
 
-## Commit Messages
+## Mensajes de Commit
 
-We follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
+Seguimos la especificación de [Conventional Commits](https://www.conventionalcommits.org/).
 
-### Format
+### Formato
 
 ```
-<type>(<scope>): <subject>
+<tipo>(<ámbito>): <asunto>
 
-[optional body]
+[cuerpo opcional]
 
-[optional footer]
+[pie de página opcional]
 ```
 
-### Types
+### Tipos
 
-| Type | Description |
+| Tipo | Descripción |
 |------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation changes |
-| `style` | Code style changes (formatting, etc.) |
-| `refactor` | Code refactoring |
-| `test` | Adding or updating tests |
-| `chore` | Maintenance tasks |
-| `perf` | Performance improvements |
+| `feat` | Nueva funcionalidad |
+| `fix` | Corrección de bug |
+| `docs` | Cambios de documentación |
+| `style` | Cambios de estilo de código (formato, etc.) |
+| `refactor` | Refactorización de código |
+| `test` | Agregar o actualizar pruebas |
+| `chore` | Tareas de mantenimiento |
+| `perf` | Mejoras de rendimiento |
 
-### Scopes
+### Ámbitos
 
-| Scope | Description |
-|-------|-------------|
-| `backend` | Backend API changes |
-| `frontend` | Frontend changes |
-| `firmware` | ESP8266 firmware |
-| `docs` | Documentation |
-| `deps` | Dependencies |
+| Ámbito | Descripción |
+|--------|-------------|
+| `backend` | Cambios de API Backend |
+| `frontend` | Cambios de Frontend |
+| `firmware` | Firmware ESP8266 |
+| `docs` | Documentación |
+| `deps` | Dependencias |
 
-### Examples
+### Ejemplos
 
 ```bash
-# Feature
-feat(backend): add temperature threshold alerts
+# Funcionalidad
+feat(backend): agregar alertas de umbral de temperatura
 
-# Bug fix
-fix(frontend): resolve sensor chart rendering issue
+# Corrección de bug
+fix(frontend): resolver problema de renderizado de gráfico de sensores
 
-# Documentation
-docs: update API reference with new endpoints
+# Documentación
+docs: actualizar referencia de API con nuevos endpoints
 
-# Refactoring
-refactor(backend): extract MQTT logic into separate module
+# Refactorización
+refactor(backend): extraer lógica MQTT a módulo separado
 
-# Dependencies
-chore(deps): update mongoose to version 8.x
+# Dependencias
+chore(deps): actualizar mongoose a versión 8.x
 ```
 
-### Subject Guidelines
+### Guías para el Asunto
 
-- Use imperative mood ("add" not "added")
-- Don't capitalize the first letter
-- No period at the end
-- Keep it under 72 characters
+- Usar modo imperativo ("agregar" no "agregado")
+- No capitalizar la primera letra
+- Sin punto al final
+- Mantenerlo bajo 72 caracteres
 
 ---
 
-## Pull Request Process
+## Proceso de Pull Request
 
-### Before Submitting
+### Antes de Enviar
 
-- [ ] Code follows project style guidelines
-- [ ] Self-reviewed the code for obvious errors
-- [ ] Added/updated tests (if applicable)
-- [ ] Updated documentation (if applicable)
-- [ ] All tests pass locally
-- [ ] Commit messages follow conventions
-- [ ] Branch is up to date with main
+- [ ] El código sigue las guías de estilo del proyecto
+- [ ] Auto-revisado el código para errores obvios
+- [ ] Agregadas/actualizadas pruebas (si aplica)
+- [ ] Actualizada documentación (si aplica)
+- [ ] Todas las pruebas pasan localmente
+- [ ] Mensajes de commit siguen convenciones
+- [ ] Rama está actualizada con main
 
-### PR Title
+### Título del PR
 
-Follow the same format as commit messages:
+Seguir el mismo formato que los mensajes de commit:
 ```
-feat(backend): add user authentication
+feat(backend): agregar autenticación de usuarios
 ```
 
-### PR Description Template
+### Plantilla de Descripción del PR
 
 ```markdown
-## Description
-[Describe what this PR does]
+## Descripción
+[Describir qué hace este PR]
 
-## Type of Change
-- [ ] Bug fix
-- [ ] New feature
-- [ ] Breaking change
-- [ ] Documentation update
+## Tipo de Cambio
+- [ ] Corrección de bug
+- [ ] Nueva funcionalidad
+- [ ] Cambio que rompe compatibilidad
+- [ ] Actualización de documentación
 
-## Related Issues
-Fixes #[issue_number]
+## Issues Relacionados
+Fixes #[numero_de_issue]
 
-## Testing
-[Describe how to test the changes]
+## Pruebas
+[Describir cómo probar los cambios]
 
-## Checklist
-- [ ] My code follows the project style guidelines
-- [ ] I have performed a self-review
-- [ ] I have added tests that prove my fix/feature works
-- [ ] New and existing tests pass locally
-- [ ] I have updated the documentation
+## Lista de Verificación
+- [ ] Mi código sigue las guías de estilo del proyecto
+- [ ] He realizado una auto-revisión
+- [ ] He agregado pruebas que prueban que mi fix/feature funciona
+- [ ] Pruebas nuevas y existentes pasan localmente
+- [ ] He actualizado la documentación
 ```
 
-### Review Process
+### Proceso de Revisión
 
-1. A maintainer will review your PR
-2. Address any requested changes
-3. Once approved, a maintainer will merge your PR
+1. Un mantenedor revisará tu PR
+2. Atender cualquier cambio solicitado
+3. Una vez aprobado, un mantenedor fusionará tu PR
 
-### After Merge
+### Después del Merge
 
-- Delete your branch
-- Pull the latest changes to your local main branch
+- Eliminar tu rama
+- Hacer pull de los últimos cambios a tu rama main local
 
 ---
 
-## Issue Guidelines
+## Guías para Issues
 
-### Reporting Bugs
+### Reportar Bugs
 
-Use the bug report template when creating issues:
+Usar la plantilla de reporte de bugs al crear issues:
 
 ```markdown
-**Describe the bug**
-A clear description of what the bug is.
+**Describe el bug**
+Una descripción clara de qué es el bug.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '...'
-3. See error
+**Para Reproducir**
+Pasos para reproducir el comportamiento:
+1. Ir a '...'
+2. Hacer clic en '...'
+3. Ver error
 
-**Expected behavior**
-What you expected to happen.
+**Comportamiento esperado**
+Lo que esperabas que sucediera.
 
-**Screenshots**
-If applicable, add screenshots.
+**Capturas de pantalla**
+Si aplica, agregar capturas de pantalla.
 
-**Environment:**
-- OS: [e.g., Windows 11]
-- Browser: [e.g., Chrome 120]
-- Node.js version: [e.g., 18.17.0]
+**Entorno:**
+- OS: [ej., Windows 11]
+- Navegador: [ej., Chrome 120]
+- Versión de Node.js: [ej., 18.17.0]
 
-**Additional context**
-Any other relevant information.
+**Contexto adicional**
+Cualquier otra información relevante.
 ```
 
-### Feature Requests
+### Solicitudes de Funcionalidades
 
 ```markdown
-**Is your feature request related to a problem?**
-A clear description of the problem.
+**¿Tu solicitud de funcionalidad está relacionada con un problema?**
+Una descripción clara del problema.
 
-**Describe the solution you'd like**
-A clear description of what you want to happen.
+**Describe la solución que te gustaría**
+Una descripción clara de lo que quieres que suceda.
 
-**Describe alternatives you've considered**
-Any alternative solutions or features you've considered.
+**Describe alternativas que has considerado**
+Cualquier solución o funcionalidad alternativa que hayas considerado.
 
-**Additional context**
-Any other context or screenshots.
+**Contexto adicional**
+Cualquier otro contexto o capturas de pantalla.
 ```
 
 ---
 
-## Testing
+## Pruebas
 
-### Backend Testing
+### Pruebas de Backend
 
-When adding tests for the backend:
+Al agregar pruebas para el backend:
 
 ```typescript
-// Example test structure
+// Ejemplo de estructura de prueba
 import request from 'supertest';
 import app from '../app';
 
-describe('Sensors API', () => {
+describe('API de Sensores', () => {
   describe('GET /api/sensors', () => {
-    it('should return all sensors', async () => {
+    it('debería retornar todos los sensores', async () => {
       const response = await request(app)
         .get('/api/sensors')
         .expect(200);
@@ -401,8 +401,8 @@ describe('Sensors API', () => {
   });
 
   describe('POST /api/sensors', () => {
-    it('should create a new sensor reading', async () => {
-      const sensorData = {
+    it('debería crear una nueva lectura de sensor', async () => {
+      const datosSensor = {
         temperature_c: '25.5',
         humidity_pct: '60.0',
         light_pct: '45',
@@ -412,7 +412,7 @@ describe('Sensors API', () => {
 
       const response = await request(app)
         .post('/api/sensors')
-        .send(sensorData)
+        .send(datosSensor)
         .expect(201);
       
       expect(response.body.temperature_c).toBe('25.5');
@@ -421,17 +421,17 @@ describe('Sensors API', () => {
 });
 ```
 
-### Frontend Testing
+### Pruebas de Frontend
 
-When adding tests for the frontend:
+Al agregar pruebas para el frontend:
 
 ```typescript
-// Example component test
+// Ejemplo de prueba de componente
 import { render, screen } from '@testing-library/react';
-import SensorCard from './SensorCard';
+import TarjetaSensor from './TarjetaSensor';
 
-describe('SensorCard', () => {
-  const mockSensor = {
+describe('TarjetaSensor', () => {
+  const sensorMock = {
     _id: '123',
     temperature_c: '25.5',
     humidity_pct: '60.0',
@@ -441,8 +441,8 @@ describe('SensorCard', () => {
     source: 'esp8266-B'
   };
 
-  it('renders sensor data correctly', () => {
-    render(<SensorCard sensor={mockSensor} />);
+  it('renderiza datos del sensor correctamente', () => {
+    render(<TarjetaSensor sensor={sensorMock} />);
     
     expect(screen.getByText('25.5°C')).toBeInTheDocument();
     expect(screen.getByText('esp8266-B')).toBeInTheDocument();
@@ -452,47 +452,47 @@ describe('SensorCard', () => {
 
 ---
 
-## Documentation
+## Documentación
 
-### When to Update Documentation
+### Cuándo Actualizar Documentación
 
-- Adding new features
-- Changing API endpoints
-- Modifying configuration options
-- Updating dependencies
-- Changing architecture
+- Agregar nuevas funcionalidades
+- Cambiar endpoints de API
+- Modificar opciones de configuración
+- Actualizar dependencias
+- Cambiar arquitectura
 
-### Documentation Files
+### Archivos de Documentación
 
-| File | Purpose |
-|------|---------|
-| `README.md` | Project overview and quick start |
-| `docs/TECHNICAL.md` | Technical details and specifications |
-| `docs/ARCHITECTURE.md` | System architecture |
-| `docs/SETUP.md` | Development setup guide |
-| `docs/API.md` | API reference |
-| `docs/CONTRIBUTING.md` | Contribution guidelines |
-| `docs/CHANGELOG.md` | Version history |
+| Archivo | Propósito |
+|---------|-----------|
+| `README.md` | Visión general del proyecto e inicio rápido |
+| `docs/TECHNICAL.md` | Detalles técnicos y especificaciones |
+| `docs/ARCHITECTURE.md` | Arquitectura del sistema |
+| `docs/SETUP.md` | Guía de configuración de desarrollo |
+| `docs/API.md` | Referencia de API |
+| `docs/CONTRIBUTING.md` | Guías de contribución |
+| `docs/CHANGELOG.md` | Historial de versiones |
 
-### Documentation Style
+### Estilo de Documentación
 
-- Use clear, concise language
-- Include code examples where helpful
-- Keep formatting consistent
-- Update the "Last updated" date
-
----
-
-## Questions?
-
-If you have questions about contributing:
-
-1. Check existing documentation
-2. Search existing issues
-3. Open a new issue with your question
-
-Thank you for contributing to SmartRoom! 🏠💡
+- Usar lenguaje claro y conciso
+- Incluir ejemplos de código donde sea útil
+- Mantener formato consistente
+- Actualizar la fecha de "Última actualización"
 
 ---
 
-*Last updated: December 2024*
+## ¿Preguntas?
+
+Si tienes preguntas sobre contribuir:
+
+1. Revisar documentación existente
+2. Buscar issues existentes
+3. Abrir un nuevo issue con tu pregunta
+
+¡Gracias por contribuir a SmartRoom! 🏠💡
+
+---
+
+*Última actualización: Diciembre 2024*

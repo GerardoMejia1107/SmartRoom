@@ -1,81 +1,81 @@
-# SmartRoom API Reference
+# Referencia de API de SmartRoom
 
-This document provides detailed API documentation for the SmartRoom backend REST API.
+Este documento proporciona documentación detallada de la API REST del backend de SmartRoom.
 
-## Base URL
+## URL Base
 
 ```
 http://localhost:3000/api
 ```
 
-## Authentication
+## Autenticación
 
-> **Note**: The current API does not implement authentication. For production deployments, consider adding JWT-based authentication.
+> **Nota**: La API actual no implementa autenticación. Para despliegues en producción, considera agregar autenticación basada en JWT.
 
-## Response Format
+## Formato de Respuesta
 
-All API responses follow a consistent JSON format:
+Todas las respuestas de la API siguen un formato JSON consistente:
 
-**Success Response:**
+**Respuesta Exitosa:**
 ```json
 {
-  "data": [ /* array of objects */ ],
-  "message": "Success"
+  "data": [ /* array de objetos */ ],
+  "message": "Éxito"
 }
 ```
 
-**Error Response:**
+**Respuesta de Error:**
 ```json
 {
-  "error": "Error message",
-  "message": "Description of what went wrong"
+  "error": "Mensaje de error",
+  "message": "Descripción de lo que salió mal"
 }
 ```
 
-## HTTP Status Codes
+## Códigos de Estado HTTP
 
-| Code | Description |
-|------|-------------|
-| 200 | OK - Request successful |
-| 201 | Created - Resource created successfully |
-| 400 | Bad Request - Invalid request body or parameters |
-| 404 | Not Found - Resource not found |
-| 500 | Internal Server Error - Server-side error |
+| Código | Descripción |
+|--------|-------------|
+| 200 | OK - Petición exitosa |
+| 201 | Creado - Recurso creado exitosamente |
+| 400 | Petición Incorrecta - Cuerpo de petición o parámetros inválidos |
+| 404 | No Encontrado - Recurso no encontrado |
+| 500 | Error Interno del Servidor - Error del lado del servidor |
 
 ---
 
 ## Endpoints
 
-### Health Check
+### Verificación de Estado
 
 #### GET /
 
-Check if the API is running.
+Verificar si la API está corriendo.
 
-**Request:**
+**Petición:**
 ```bash
 curl http://localhost:3000/
 ```
 
-**Response:**
+**Respuesta:**
 ```
 Hello, World!
 ```
 
 ---
 
-## Sensors API
+## API de Sensores
 
 ### GET /api/sensors
 
-Retrieve all sensor readings.
+Obtener todas las lecturas de sensores.
 
-**Request:**
+**Petición:**
 ```bash
 curl http://localhost:3000/api/sensors
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 [
   {
@@ -93,19 +93,19 @@ curl http://localhost:3000/api/sensors
 
 ### GET /api/sensors/:id
 
-Retrieve a specific sensor reading by ID.
+Obtener una lectura de sensor específica por ID.
 
-**Parameters:**
-| Name | Type | Location | Description |
-|------|------|----------|-------------|
-| id | string | path | MongoDB ObjectId |
+**Parámetros:**
+| Nombre | Tipo | Ubicación | Descripción |
+|--------|------|-----------|-------------|
+| id | string | ruta | ObjectId de MongoDB |
 
-**Request:**
+**Petición:**
 ```bash
 curl http://localhost:3000/api/sensors/6789abc123def456ghi789jk
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
@@ -119,28 +119,28 @@ curl http://localhost:3000/api/sensors/6789abc123def456ghi789jk
 }
 ```
 
-**Error Response (404):**
+**Respuesta de Error (404):**
 ```json
 {
-  "error": "Sensor reading not found"
+  "error": "Lectura de sensor no encontrada"
 }
 ```
 
 ### POST /api/sensors
 
-Create a new sensor reading.
+Crear una nueva lectura de sensor.
 
-**Request Body:**
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| temperature_c | string | Yes | Temperature in Celsius |
-| humidity_pct | string | Yes | Humidity percentage |
-| light_pct | string | Yes | Light level percentage |
-| low_light | boolean | Yes | Is light level low |
-| motion | boolean | Yes | Is motion detected |
-| source | string | No | Device identifier |
+**Cuerpo de Petición:**
+| Campo | Tipo | Requerido | Descripción |
+|-------|------|-----------|-------------|
+| temperature_c | string | Sí | Temperatura en Celsius |
+| humidity_pct | string | Sí | Porcentaje de humedad |
+| light_pct | string | Sí | Porcentaje de nivel de luz |
+| low_light | boolean | Sí | ¿El nivel de luz es bajo? |
+| motion | boolean | Sí | ¿Se detectó movimiento? |
+| source | string | No | Identificador del dispositivo |
 
-**Request:**
+**Petición:**
 ```bash
 curl -X POST http://localhost:3000/api/sensors \
   -H "Content-Type: application/json" \
@@ -154,7 +154,7 @@ curl -X POST http://localhost:3000/api/sensors \
   }'
 ```
 
-**Response (201):**
+**Respuesta (201):**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
@@ -170,9 +170,9 @@ curl -X POST http://localhost:3000/api/sensors \
 
 ### PUT /api/sensors/:id
 
-Update an existing sensor reading.
+Actualizar una lectura de sensor existente.
 
-**Request:**
+**Petición:**
 ```bash
 curl -X PUT http://localhost:3000/api/sensors/6789abc123def456ghi789jk \
   -H "Content-Type: application/json" \
@@ -185,7 +185,7 @@ curl -X PUT http://localhost:3000/api/sensors/6789abc123def456ghi789jk \
   }'
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
@@ -201,34 +201,34 @@ curl -X PUT http://localhost:3000/api/sensors/6789abc123def456ghi789jk \
 
 ### DELETE /api/sensors/:id
 
-Delete a sensor reading.
+Eliminar una lectura de sensor.
 
-**Request:**
+**Petición:**
 ```bash
 curl -X DELETE http://localhost:3000/api/sensors/6789abc123def456ghi789jk
 ```
 
-**Response (200):**
+**Respuesta (200):**
 ```json
 {
-  "message": "Sensor reading deleted"
+  "message": "Lectura de sensor eliminada"
 }
 ```
 
 ---
 
-## Devices API
+## API de Dispositivos
 
 ### GET /api/devices
 
-Retrieve all device states.
+Obtener estados de todos los dispositivos.
 
-**Request:**
+**Petición:**
 ```bash
 curl http://localhost:3000/api/devices
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 [
   {
@@ -253,21 +253,21 @@ curl http://localhost:3000/api/devices
 
 ### PATCH /api/devices/available
 
-Toggle manual control mode.
+Alternar modo de control manual.
 
-**Request Body:**
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| available | boolean | Yes | Enable/disable manual control |
+**Cuerpo de Petición:**
+| Campo | Tipo | Requerido | Descripción |
+|-------|------|-----------|-------------|
+| available | boolean | Sí | Habilitar/deshabilitar control manual |
 
-**Request:**
+**Petición:**
 ```bash
 curl -X PATCH http://localhost:3000/api/devices/available \
   -H "Content-Type: application/json" \
   -d '{"available": true}'
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
@@ -281,21 +281,21 @@ curl -X PATCH http://localhost:3000/api/devices/available \
 
 ### PATCH /api/devices/door
 
-Update door state.
+Actualizar estado de la puerta.
 
-**Request Body:**
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| state | string | Yes | `"open"`, `"closed"`, or `"locked"` |
+**Cuerpo de Petición:**
+| Campo | Tipo | Requerido | Descripción |
+|-------|------|-----------|-------------|
+| state | string | Sí | `"open"`, `"closed"`, o `"locked"` |
 
-**Request:**
+**Petición:**
 ```bash
 curl -X PATCH http://localhost:3000/api/devices/door \
   -H "Content-Type: application/json" \
   -d '{"state": "open"}'
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
@@ -312,14 +312,14 @@ curl -X PATCH http://localhost:3000/api/devices/door \
 
 ### PATCH /api/devices/window
 
-Update window state.
+Actualizar estado de la ventana.
 
-**Request Body:**
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| state | string | Yes | `"open"` or `"closed"` |
+**Cuerpo de Petición:**
+| Campo | Tipo | Requerido | Descripción |
+|-------|------|-----------|-------------|
+| state | string | Sí | `"open"` o `"closed"` |
 
-**Request:**
+**Petición:**
 ```bash
 curl -X PATCH http://localhost:3000/api/devices/window \
   -H "Content-Type: application/json" \
@@ -328,14 +328,14 @@ curl -X PATCH http://localhost:3000/api/devices/window \
 
 ### PATCH /api/devices/lights
 
-Update lights state.
+Actualizar estado de las luces.
 
-**Request Body:**
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| on | boolean | Yes | Turn lights on/off |
+**Cuerpo de Petición:**
+| Campo | Tipo | Requerido | Descripción |
+|-------|------|-----------|-------------|
+| on | boolean | Sí | Encender/apagar luces |
 
-**Request:**
+**Petición:**
 ```bash
 curl -X PATCH http://localhost:3000/api/devices/lights \
   -H "Content-Type: application/json" \
@@ -344,24 +344,24 @@ curl -X PATCH http://localhost:3000/api/devices/lights \
 
 ---
 
-## Users API
+## API de Usuarios
 
 ### GET /api/users
 
-Retrieve all users.
+Obtener todos los usuarios.
 
-**Request:**
+**Petición:**
 ```bash
 curl http://localhost:3000/api/users
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 [
   {
     "_id": "6789abc123def456ghi789jk",
-    "name": "John Doe",
-    "email": "john.doe@example.com",
+    "name": "Juan Pérez",
+    "email": "juan.perez@ejemplo.com",
     "rfid_uid": "A3299BF4",
     "role": "user",
     "active": true,
@@ -373,33 +373,33 @@ curl http://localhost:3000/api/users
 
 ### GET /api/users/allowed
 
-Retrieve all allowed RFID UIDs (for active users only).
+Obtener todos los UIDs RFID permitidos (solo usuarios activos).
 
-**Request:**
+**Petición:**
 ```bash
 curl http://localhost:3000/api/users/allowed
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 ["A3299BF4", "B4AA0CE5", "C5BB1DF6"]
 ```
 
 ### GET /api/users/:id
 
-Retrieve a specific user by ID.
+Obtener un usuario específico por ID.
 
-**Request:**
+**Petición:**
 ```bash
 curl http://localhost:3000/api/users/6789abc123def456ghi789jk
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
-  "name": "John Doe",
-  "email": "john.doe@example.com",
+  "name": "Juan Pérez",
+  "email": "juan.perez@ejemplo.com",
   "rfid_uid": "A3299BF4",
   "role": "user",
   "active": true,
@@ -410,35 +410,35 @@ curl http://localhost:3000/api/users/6789abc123def456ghi789jk
 
 ### POST /api/users
 
-Create a new user.
+Crear un nuevo usuario.
 
-**Request Body:**
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| name | string | Yes | User's full name |
-| email | string | Yes | User's email (unique) |
-| rfid_uid | string | Yes | RFID card UID (unique) |
-| role | string | No | `"admin"`, `"user"`, or `"guest"` (default: `"user"`) |
-| active | boolean | No | Is user active (default: `true`) |
+**Cuerpo de Petición:**
+| Campo | Tipo | Requerido | Descripción |
+|-------|------|-----------|-------------|
+| name | string | Sí | Nombre completo del usuario |
+| email | string | Sí | Email del usuario (único) |
+| rfid_uid | string | Sí | UID de tarjeta RFID (único) |
+| role | string | No | `"admin"`, `"user"`, o `"guest"` (por defecto: `"user"`) |
+| active | boolean | No | ¿Usuario activo? (por defecto: `true`) |
 
-**Request:**
+**Petición:**
 ```bash
 curl -X POST http://localhost:3000/api/users \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Jane Smith",
-    "email": "jane.smith@example.com",
+    "name": "María García",
+    "email": "maria.garcia@ejemplo.com",
     "rfid_uid": "D6CC2EG7",
     "role": "user"
   }'
 ```
 
-**Response (201):**
+**Respuesta (201):**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
-  "name": "Jane Smith",
-  "email": "jane.smith@example.com",
+  "name": "María García",
+  "email": "maria.garcia@ejemplo.com",
   "rfid_uid": "D6CC2EG7",
   "role": "user",
   "active": true,
@@ -447,33 +447,33 @@ curl -X POST http://localhost:3000/api/users \
 }
 ```
 
-**Error Response (400 - Duplicate Email):**
+**Respuesta de Error (400 - Email Duplicado):**
 ```json
 {
-  "error": "Email already exists"
+  "error": "El email ya existe"
 }
 ```
 
 ### PUT /api/users/:id
 
-Update an existing user.
+Actualizar un usuario existente.
 
-**Request:**
+**Petición:**
 ```bash
 curl -X PUT http://localhost:3000/api/users/6789abc123def456ghi789jk \
   -H "Content-Type: application/json" \
   -d '{
-    "name": "Jane Smith-Johnson",
+    "name": "María García López",
     "role": "admin"
   }'
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
-  "name": "Jane Smith-Johnson",
-  "email": "jane.smith@example.com",
+  "name": "María García López",
+  "email": "maria.garcia@ejemplo.com",
   "rfid_uid": "D6CC2EG7",
   "role": "admin",
   "active": true,
@@ -484,34 +484,34 @@ curl -X PUT http://localhost:3000/api/users/6789abc123def456ghi789jk \
 
 ### DELETE /api/users/:id
 
-Delete a user.
+Eliminar un usuario.
 
-**Request:**
+**Petición:**
 ```bash
 curl -X DELETE http://localhost:3000/api/users/6789abc123def456ghi789jk
 ```
 
-**Response (200):**
+**Respuesta (200):**
 ```json
 {
-  "message": "User deleted"
+  "message": "Usuario eliminado"
 }
 ```
 
 ---
 
-## Access Logs API
+## API de Logs de Acceso
 
 ### GET /api/logs
 
-Retrieve all access logs.
+Obtener todos los logs de acceso.
 
-**Request:**
+**Petición:**
 ```bash
 curl http://localhost:3000/api/logs
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 [
   {
@@ -528,14 +528,14 @@ curl http://localhost:3000/api/logs
 
 ### GET /api/logs/:id
 
-Retrieve a specific access log by ID.
+Obtener un log de acceso específico por ID.
 
-**Request:**
+**Petición:**
 ```bash
 curl http://localhost:3000/api/logs/6789abc123def456ghi789jk
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
@@ -550,18 +550,18 @@ curl http://localhost:3000/api/logs/6789abc123def456ghi789jk
 
 ### POST /api/logs
 
-Create a new access log entry.
+Crear una nueva entrada de log de acceso.
 
-**Request Body:**
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| uid | string | Yes | RFID card UID |
-| authorized | boolean | Yes | Was access authorized |
-| door_action | string | No | `"open"`, `"deny"`, or `"lock"` (default: `"deny"`) |
-| user_id | string | No | MongoDB ObjectId of associated user |
-| source | string | No | Device identifier |
+**Cuerpo de Petición:**
+| Campo | Tipo | Requerido | Descripción |
+|-------|------|-----------|-------------|
+| uid | string | Sí | UID de tarjeta RFID |
+| authorized | boolean | Sí | ¿Acceso autorizado? |
+| door_action | string | No | `"open"`, `"deny"`, o `"lock"` (por defecto: `"deny"`) |
+| user_id | string | No | ObjectId de MongoDB del usuario asociado |
+| source | string | No | Identificador del dispositivo |
 
-**Request:**
+**Petición:**
 ```bash
 curl -X POST http://localhost:3000/api/logs \
   -H "Content-Type: application/json" \
@@ -573,7 +573,7 @@ curl -X POST http://localhost:3000/api/logs \
   }'
 ```
 
-**Response (201):**
+**Respuesta (201):**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
@@ -587,9 +587,9 @@ curl -X POST http://localhost:3000/api/logs \
 
 ### PUT /api/logs/:id
 
-Update an existing access log.
+Actualizar un log de acceso existente.
 
-**Request:**
+**Petición:**
 ```bash
 curl -X PUT http://localhost:3000/api/logs/6789abc123def456ghi789jk \
   -H "Content-Type: application/json" \
@@ -600,33 +600,33 @@ curl -X PUT http://localhost:3000/api/logs/6789abc123def456ghi789jk \
 
 ### DELETE /api/logs/:id
 
-Delete an access log entry.
+Eliminar una entrada de log de acceso.
 
-**Request:**
+**Petición:**
 ```bash
 curl -X DELETE http://localhost:3000/api/logs/6789abc123def456ghi789jk
 ```
 
 ---
 
-## Alerts API
+## API de Alertas
 
 ### GET /api/alerts
 
-Retrieve all alerts.
+Obtener todas las alertas.
 
-**Request:**
+**Petición:**
 ```bash
 curl http://localhost:3000/api/alerts
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 [
   {
     "_id": "6789abc123def456ghi789jk",
     "type": "unauthorized_presence",
-    "description": "Presence >30s without valid RFID",
+    "description": "Presencia >30s sin RFID válido",
     "duration_ms": 30000,
     "timestamp": "2025-01-15T10:30:00.000Z",
     "resolved": false,
@@ -637,51 +637,51 @@ curl http://localhost:3000/api/alerts
 
 ### GET /api/alerts/:id
 
-Retrieve a specific alert by ID.
+Obtener una alerta específica por ID.
 
-**Request:**
+**Petición:**
 ```bash
 curl http://localhost:3000/api/alerts/6789abc123def456ghi789jk
 ```
 
 ### POST /api/alerts
 
-Create a new alert.
+Crear una nueva alerta.
 
-**Request Body:**
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| type | string | Yes | Alert type (see below) |
-| description | string | Yes | Alert description |
-| duration_ms | number | No | Duration in milliseconds |
-| resolved | boolean | No | Is alert resolved (default: `false`) |
-| source | string | No | Device identifier |
+**Cuerpo de Petición:**
+| Campo | Tipo | Requerido | Descripción |
+|-------|------|-----------|-------------|
+| type | string | Sí | Tipo de alerta (ver abajo) |
+| description | string | Sí | Descripción de la alerta |
+| duration_ms | number | No | Duración en milisegundos |
+| resolved | boolean | No | ¿Alerta resuelta? (por defecto: `false`) |
+| source | string | No | Identificador del dispositivo |
 
-**Alert Types:**
-- `unauthorized_presence` - Detected presence without valid RFID
-- `motion_alert` - Motion detected in restricted area
-- `temp_high` - Temperature exceeded threshold
-- `humidity_high` - Humidity exceeded threshold
-- `forced_door` - Door forced open
+**Tipos de Alerta:**
+- `unauthorized_presence` - Presencia detectada sin RFID válido
+- `motion_alert` - Movimiento detectado en área restringida
+- `temp_high` - Temperatura excedió umbral
+- `humidity_high` - Humedad excedió umbral
+- `forced_door` - Puerta forzada abierta
 
-**Request:**
+**Petición:**
 ```bash
 curl -X POST http://localhost:3000/api/alerts \
   -H "Content-Type: application/json" \
   -d '{
     "type": "unauthorized_presence",
-    "description": "Presence >30s without valid RFID",
+    "description": "Presencia >30s sin RFID válido",
     "duration_ms": 30000,
     "source": "esp32-A"
   }'
 ```
 
-**Response (201):**
+**Respuesta (201):**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
   "type": "unauthorized_presence",
-  "description": "Presence >30s without valid RFID",
+  "description": "Presencia >30s sin RFID válido",
   "duration_ms": 30000,
   "timestamp": "2025-01-15T10:35:00.000Z",
   "resolved": false,
@@ -691,9 +691,9 @@ curl -X POST http://localhost:3000/api/alerts \
 
 ### PUT /api/alerts/:id
 
-Update an existing alert (e.g., mark as resolved).
+Actualizar una alerta existente (ej., marcar como resuelta).
 
-**Request:**
+**Petición:**
 ```bash
 curl -X PUT http://localhost:3000/api/alerts/6789abc123def456ghi789jk \
   -H "Content-Type: application/json" \
@@ -702,12 +702,12 @@ curl -X PUT http://localhost:3000/api/alerts/6789abc123def456ghi789jk \
   }'
 ```
 
-**Response:**
+**Respuesta:**
 ```json
 {
   "_id": "6789abc123def456ghi789jk",
   "type": "unauthorized_presence",
-  "description": "Presence >30s without valid RFID",
+  "description": "Presencia >30s sin RFID válido",
   "duration_ms": 30000,
   "timestamp": "2025-01-15T10:30:00.000Z",
   "resolved": true,
@@ -717,61 +717,61 @@ curl -X PUT http://localhost:3000/api/alerts/6789abc123def456ghi789jk \
 
 ### DELETE /api/alerts/:id
 
-Delete an alert.
+Eliminar una alerta.
 
-**Request:**
+**Petición:**
 ```bash
 curl -X DELETE http://localhost:3000/api/alerts/6789abc123def456ghi789jk
 ```
 
 ---
 
-## Error Handling
+## Manejo de Errores
 
-### Validation Errors
+### Errores de Validación
 
-When required fields are missing or invalid:
+Cuando faltan campos requeridos o son inválidos:
 
 ```json
 {
   "error": "ValidationError",
-  "message": "Path `email` is required."
+  "message": "La ruta `email` es requerida."
 }
 ```
 
-### Not Found Errors
+### Errores de No Encontrado
 
-When a resource is not found:
+Cuando un recurso no se encuentra:
 
 ```json
 {
   "error": "NotFound",
-  "message": "Resource with ID xyz not found"
+  "message": "Recurso con ID xyz no encontrado"
 }
 ```
 
-### Server Errors
+### Errores del Servidor
 
-When an unexpected error occurs:
+Cuando ocurre un error inesperado:
 
 ```json
 {
   "error": "InternalServerError",
-  "message": "An unexpected error occurred"
+  "message": "Ocurrió un error inesperado"
 }
 ```
 
 ---
 
-## Rate Limiting
+## Limitación de Tasa
 
-> **Note**: Rate limiting is not currently implemented. For production, consider adding rate limiting middleware.
+> **Nota**: La limitación de tasa no está implementada actualmente. Para producción, considera agregar middleware de limitación de tasa.
 
 ---
 
 ## CORS
 
-The API is configured to accept requests from any origin in development:
+La API está configurada para aceptar peticiones desde cualquier origen en desarrollo:
 
 ```typescript
 app.use(cors({
@@ -781,18 +781,18 @@ app.use(cors({
 }));
 ```
 
-For production, restrict to specific origins.
+Para producción, restringir a orígenes específicos.
 
 ---
 
-## Pagination
+## Paginación
 
-> **Note**: Pagination is not currently implemented. All endpoints return all matching records. For production with large datasets, consider implementing pagination.
+> **Nota**: La paginación no está implementada actualmente. Todos los endpoints retornan todos los registros coincidentes. Para producción con conjuntos de datos grandes, considera implementar paginación.
 
-Example future pagination format:
+Ejemplo de formato de paginación futura:
 ```json
 {
-  "data": [ /* items */ ],
+  "data": [ /* elementos */ ],
   "pagination": {
     "page": 1,
     "limit": 20,
@@ -804,12 +804,12 @@ Example future pagination format:
 
 ---
 
-## Related Documentation
+## Documentación Relacionada
 
-- [Technical Documentation](./TECHNICAL.md) - System overview and details
-- [Architecture](./ARCHITECTURE.md) - System architecture diagrams
-- [Setup Guide](./SETUP.md) - Development environment setup
+- [Documentación Técnica](./TECHNICAL.md) - Visión general y detalles del sistema
+- [Arquitectura](./ARCHITECTURE.md) - Diagramas de arquitectura del sistema
+- [Guía de Configuración](./SETUP.md) - Configuración del entorno de desarrollo
 
 ---
 
-*Last updated: December 2024*
+*Última actualización: Diciembre 2024*

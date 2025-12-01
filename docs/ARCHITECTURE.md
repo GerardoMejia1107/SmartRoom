@@ -1,60 +1,60 @@
-# SmartRoom Architecture
+# Arquitectura de SmartRoom
 
-This document describes the system architecture of the SmartRoom IoT smart room automation system.
+Este documento describe la arquitectura del sistema SmartRoom de automatización de habitaciones inteligentes basado en IoT.
 
-## System Overview
+## Visión General del Sistema
 
-SmartRoom is a full-stack IoT solution that combines embedded systems, backend services, and a modern web frontend to create an intelligent room automation system.
+SmartRoom es una solución IoT full-stack que combina sistemas embebidos, servicios backend y un frontend web moderno para crear un sistema inteligente de automatización de habitaciones.
 
-## Architecture Diagram
+## Diagrama de Arquitectura
 
 ```mermaid
 flowchart TB
-    subgraph Hardware["Hardware Layer"]
-        ESP_A["ESP8266-A<br/>(Access Control)"]
-        ESP_B["ESP8266-B<br/>(Environmental)"]
+    subgraph Hardware["Capa de Hardware"]
+        ESP_A["ESP8266-A<br/>(Control de Acceso)"]
+        ESP_B["ESP8266-B<br/>(Ambiental)"]
         
-        subgraph Sensors_A["Sensors/Actuators A"]
-            RFID["RFID Reader<br/>MFRC522"]
-            US["Ultrasonic<br/>HC-SR04"]
-            SERVO_D["Servo Motor<br/>(Door)"]
-            LED_A["LED Alarm"]
+        subgraph Sensors_A["Sensores/Actuadores A"]
+            RFID["Lector RFID<br/>MFRC522"]
+            US["Ultrasónico<br/>HC-SR04"]
+            SERVO_D["Servomotor<br/>(Puerta)"]
+            LED_A["LED Alarma"]
         end
         
-        subgraph Sensors_B["Sensors/Actuators B"]
-            DHT["DHT11<br/>Temp/Humidity"]
-            LDR["LDR<br/>Light Sensor"]
-            PIR["PIR<br/>Motion"]
-            SERVO_W["Servo Motor<br/>(Window)"]
-            LED_L["LED Light"]
+        subgraph Sensors_B["Sensores/Actuadores B"]
+            DHT["DHT11<br/>Temp/Humedad"]
+            LDR["LDR<br/>Sensor de Luz"]
+            PIR["PIR<br/>Movimiento"]
+            SERVO_W["Servomotor<br/>(Ventana)"]
+            LED_L["LED Luz"]
         end
         
         ESP_A --- Sensors_A
         ESP_B --- Sensors_B
     end
     
-    subgraph Communication["Communication Layer"]
-        MQTT["MQTT Broker<br/>(Mosquitto)"]
+    subgraph Communication["Capa de Comunicación"]
+        MQTT["Broker MQTT<br/>(Mosquitto)"]
         HTTP["HTTP/REST"]
     end
     
-    subgraph Backend["Backend Layer"]
-        API["Express.js API<br/>(Node.js + TypeScript)"]
-        MQTT_C["MQTT Client"]
+    subgraph Backend["Capa Backend"]
+        API["API Express.js<br/>(Node.js + TypeScript)"]
+        MQTT_C["Cliente MQTT"]
         
-        subgraph Controllers["Controllers"]
-            SC["Sensors"]
-            DC["Devices"]
-            UC["Users"]
-            LC["Access Logs"]
-            AC["Alerts"]
+        subgraph Controllers["Controladores"]
+            SC["Sensores"]
+            DC["Dispositivos"]
+            UC["Usuarios"]
+            LC["Logs de Acceso"]
+            AC["Alertas"]
         end
     end
     
-    subgraph Database["Data Layer"]
+    subgraph Database["Capa de Datos"]
         MongoDB[("MongoDB")]
         
-        subgraph Collections["Collections"]
+        subgraph Collections["Colecciones"]
             sensors["sensors"]
             devices["devices"]
             users["users"]
@@ -63,14 +63,14 @@ flowchart TB
         end
     end
     
-    subgraph Frontend["Frontend Layer"]
-        React["React App<br/>(Vite + TypeScript)"]
+    subgraph Frontend["Capa Frontend"]
+        React["App React<br/>(Vite + TypeScript)"]
         
-        subgraph Pages["Pages"]
+        subgraph Pages["Páginas"]
             Dashboard["Dashboard"]
-            Controls["Controls"]
-            Access["Access Logs"]
-            Events["Events/Alerts"]
+            Controls["Controles"]
+            Access["Logs de Acceso"]
+            Events["Eventos/Alertas"]
         end
     end
     
@@ -90,34 +90,34 @@ flowchart TB
     React --- Pages
 ```
 
-## ASCII Architecture Diagram
+## Diagrama de Arquitectura ASCII
 
-For environments that don't render Mermaid diagrams:
+Para entornos que no renderizan diagramas Mermaid:
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              SMARTROOM ARCHITECTURE                              │
+│                           ARQUITECTURA SMARTROOM                                 │
 └─────────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│                              HARDWARE LAYER                                      │
+│                              CAPA DE HARDWARE                                    │
 │  ┌─────────────────────────────┐    ┌─────────────────────────────┐            │
-│  │      ESP8266-A (Access)      │    │   ESP8266-B (Environmental)  │            │
+│  │      ESP8266-A (Acceso)      │    │   ESP8266-B (Ambiental)      │            │
 │  │  ┌─────────────────────────┐ │    │  ┌─────────────────────────┐ │            │
-│  │  │ • RFID Reader (MFRC522) │ │    │  │ • DHT11 (Temp/Humidity) │ │            │
-│  │  │ • Ultrasonic (HC-SR04)  │ │    │  │ • LDR (Light Sensor)    │ │            │
-│  │  │ • Servo Motor (Door)    │ │    │  │ • PIR (Motion Sensor)   │ │            │
-│  │  │ • LED Alarm             │ │    │  │ • Servo Motor (Window)  │ │            │
-│  │  └─────────────────────────┘ │    │  │ • LED Light             │ │            │
+│  │  │ • Lector RFID (MFRC522) │ │    │  │ • DHT11 (Temp/Humedad)  │ │            │
+│  │  │ • Ultrasónico (HC-SR04) │ │    │  │ • LDR (Sensor de Luz)   │ │            │
+│  │  │ • Servomotor (Puerta)   │ │    │  │ • PIR (Sensor Movim.)   │ │            │
+│  │  │ • LED Alarma            │ │    │  │ • Servomotor (Ventana)  │ │            │
+│  │  └─────────────────────────┘ │    │  │ • LED Luz               │ │            │
 │  └──────────────┬──────────────┘    └──────────────┬──────────────┘            │
 └─────────────────┼──────────────────────────────────┼────────────────────────────┘
                   │                                  │
                   │  WiFi (HTTP POST / MQTT)         │  WiFi (HTTP POST / MQTT)
                   │                                  │
 ┌─────────────────┼──────────────────────────────────┼────────────────────────────┐
-│                 ▼                                  ▼     COMMUNICATION LAYER     │
+│                 ▼                                  ▼     CAPA DE COMUNICACIÓN    │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │                         MQTT BROKER (Mosquitto)                           │  │
+│  │                       BROKER MQTT (Mosquitto)                             │  │
 │  │           Topics: rfid/allowed/update, room/control/*                     │  │
 │  └────────────────────────────────────┬─────────────────────────────────────┘  │
 └───────────────────────────────────────┼─────────────────────────────────────────┘
@@ -125,23 +125,23 @@ For environments that don't render Mermaid diagrams:
                                         │ MQTT Subscribe/Publish
                                         │
 ┌───────────────────────────────────────┼─────────────────────────────────────────┐
-│                                       ▼              BACKEND LAYER              │
+│                                       ▼                    CAPA BACKEND         │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │                    EXPRESS.JS API (Node.js + TypeScript)                  │  │
+│  │                    API EXPRESS.JS (Node.js + TypeScript)                  │  │
 │  │                                                                           │  │
 │  │   ┌────────────────────────────────────────────────────────────────────┐ │  │
-│  │   │                          ROUTES                                    │ │  │
+│  │   │                           RUTAS                                    │ │  │
 │  │   │  /api/sensors  /api/devices  /api/users  /api/logs  /api/alerts   │ │  │
 │  │   └────────────────────────────────────────────────────────────────────┘ │  │
 │  │                                                                           │  │
 │  │   ┌────────────────────────────────────────────────────────────────────┐ │  │
-│  │   │                       CONTROLLERS                                   │ │  │
+│  │   │                       CONTROLADORES                                 │ │  │
 │  │   │  SensorController | DeviceController | UserController | ...        │ │  │
 │  │   └────────────────────────────────────────────────────────────────────┘ │  │
 │  │                                                                           │  │
 │  │   ┌────────────────────────────────────────────────────────────────────┐ │  │
-│  │   │                         SERVICES                                    │ │  │
-│  │   │  UserService | MQTT Client                                         │ │  │
+│  │   │                         SERVICIOS                                   │ │  │
+│  │   │  UserService | Cliente MQTT                                        │ │  │
 │  │   └────────────────────────────────────────────────────────────────────┘ │  │
 │  └──────────────────────────────────────┬───────────────────────────────────┘  │
 └─────────────────────────────────────────┼───────────────────────────────────────┘
@@ -149,7 +149,7 @@ For environments that don't render Mermaid diagrams:
                                           │ Mongoose ODM
                                           │
 ┌─────────────────────────────────────────┼───────────────────────────────────────┐
-│                                         ▼                   DATA LAYER          │
+│                                         ▼                   CAPA DE DATOS       │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
 │  │                              MONGODB                                      │  │
 │  │                                                                           │  │
@@ -160,78 +160,78 @@ For environments that don't render Mermaid diagrams:
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────────────────────┘
                                           ▲
-                                          │ HTTP REST API
+                                          │ API HTTP REST
                                           │
 ┌─────────────────────────────────────────┼───────────────────────────────────────┐
-│                                         │                FRONTEND LAYER         │
+│                                         │                  CAPA FRONTEND        │
 │  ┌──────────────────────────────────────────────────────────────────────────┐  │
-│  │                   REACT APPLICATION (Vite + TypeScript)                   │  │
+│  │                   APLICACIÓN REACT (Vite + TypeScript)                    │  │
 │  │                                                                           │  │
 │  │   ┌──────────────────────────────────────────────────────────────────┐   │  │
-│  │   │                           PAGES                                   │   │  │
+│  │   │                           PÁGINAS                                 │   │  │
 │  │   │   ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐           │   │  │
-│  │   │   │Dashboard │ │ Controls │ │  Access  │ │  Events  │           │   │  │
+│  │   │   │Dashboard │ │Controles │ │  Acceso  │ │ Eventos  │           │   │  │
 │  │   │   └──────────┘ └──────────┘ └──────────┘ └──────────┘           │   │  │
 │  │   └──────────────────────────────────────────────────────────────────┘   │  │
 │  │                                                                           │  │
 │  │   ┌──────────────────────────────────────────────────────────────────┐   │  │
-│  │   │                       TECH STACK                                  │   │  │
+│  │   │                       STACK TECNOLÓGICO                           │   │  │
 │  │   │   React 19 | React Router | Tailwind CSS | Recharts | Lucide    │   │  │
 │  │   └──────────────────────────────────────────────────────────────────┘   │  │
 │  └──────────────────────────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-## Component Descriptions
+## Descripción de Componentes
 
-### Hardware Layer
+### Capa de Hardware
 
-#### ESP8266-A (Access Control Node)
+#### ESP8266-A (Nodo de Control de Acceso)
 
-**Purpose**: Manages physical access to the room through RFID-based authentication.
+**Propósito**: Gestiona el acceso físico a la habitación mediante autenticación basada en RFID.
 
-**Components**:
-- **MFRC522 RFID Reader**: Reads RFID card UIDs for authentication
-- **HC-SR04 Ultrasonic Sensor**: Detects presence near the door
-- **SG90 Servo Motor**: Controls door lock mechanism
-- **LED Alarm**: Visual indicator for unauthorized access attempts
+**Componentes**:
+- **Lector RFID MFRC522**: Lee UIDs de tarjetas RFID para autenticación
+- **Sensor Ultrasónico HC-SR04**: Detecta presencia cerca de la puerta
+- **Servomotor SG90**: Controla el mecanismo de cerradura de la puerta
+- **LED Alarma**: Indicador visual para intentos de acceso no autorizados
 
-**Responsibilities**:
-- Read and validate RFID cards
-- Control door servo based on authentication
-- Detect prolonged presence without valid RFID
-- Generate security alerts
-- Log access attempts to backend
+**Responsabilidades**:
+- Leer y validar tarjetas RFID
+- Controlar servo de puerta basado en autenticación
+- Detectar presencia prolongada sin RFID válido
+- Generar alertas de seguridad
+- Registrar intentos de acceso en el backend
 
-#### ESP8266-B (Environmental Control Node)
+#### ESP8266-B (Nodo de Control Ambiental)
 
-**Purpose**: Monitors environmental conditions and controls room comfort systems.
+**Propósito**: Monitorea condiciones ambientales y controla sistemas de confort de la habitación.
 
-**Components**:
-- **DHT11**: Temperature and humidity sensor
-- **LDR (Photoresistor)**: Light level sensor
-- **HC-SR501 PIR**: Motion detection sensor
-- **SG90 Servo Motor**: Controls window mechanism
-- **LED**: Room lighting control
+**Componentes**:
+- **DHT11**: Sensor de temperatura y humedad
+- **LDR (Fotorresistor)**: Sensor de nivel de luz
+- **HC-SR501 PIR**: Sensor de detección de movimiento
+- **Servomotor SG90**: Controla mecanismo de ventana
+- **LED**: Control de iluminación de la habitación
 
-**Responsibilities**:
-- Monitor temperature, humidity, and light levels
-- Detect motion in the room
-- Automatic window control based on temperature
-- Automatic light control based on ambient light
-- Support manual override via MQTT commands
-- Send sensor readings to backend
+**Responsabilidades**:
+- Monitorear temperatura, humedad y niveles de luz
+- Detectar movimiento en la habitación
+- Control automático de ventana basado en temperatura
+- Control automático de luz basado en luz ambiental
+- Soportar modo manual vía comandos MQTT
+- Enviar lecturas de sensores al backend
 
-### Communication Layer
+### Capa de Comunicación
 
-#### MQTT Broker (Mosquitto)
+#### Broker MQTT (Mosquitto)
 
-**Purpose**: Enables real-time bidirectional communication between backend and ESP8266 devices.
+**Propósito**: Habilita comunicación bidireccional en tiempo real entre backend y dispositivos ESP8266.
 
 **Topics**:
-| Topic | Publisher | Subscriber | Payload |
-|-------|-----------|------------|---------|
-| `rfid/allowed/update` | Backend | ESP8266-A | JSON array of allowed UIDs |
+| Topic | Publicador | Suscriptor | Payload |
+|-------|------------|------------|---------|
+| `rfid/allowed/update` | Backend | ESP8266-A | Array JSON de UIDs permitidos |
 | `room/control/lights` | Backend | ESP8266-B | `"on"` / `"off"` |
 | `room/control/window` | Backend | ESP8266-B | `"open"` / `"closed"` |
 | `room/control/door` | Backend | ESP8266-A | `"open"` / `"closed"` / `"locked"` |
@@ -239,24 +239,24 @@ For environments that don't render Mermaid diagrams:
 
 #### HTTP/REST
 
-**Purpose**: Primary communication method for sensor data and API requests.
+**Propósito**: Método de comunicación principal para datos de sensores y peticiones a la API.
 
-**Endpoints**: ESP8266 devices POST sensor data and logs to backend REST API.
+**Endpoints**: Dispositivos ESP8266 envían POST de datos de sensores y logs a la API REST del backend.
 
-### Backend Layer
+### Capa Backend
 
-#### Express.js API Server
+#### Servidor API Express.js
 
-**Purpose**: Central hub for data processing, storage, and device coordination.
+**Propósito**: Hub central para procesamiento de datos, almacenamiento y coordinación de dispositivos.
 
-**Structure**:
+**Estructura**:
 ```
 backend/src/
-├── app.ts              # Express app configuration
-├── server.ts           # Server entry point
+├── app.ts              # Configuración de la app Express
+├── server.ts           # Punto de entrada del servidor
 ├── config/
-│   ├── config.ts       # Environment configuration
-│   └── response.ts     # Response utilities
+│   ├── config.ts       # Configuración de entorno
+│   └── response.ts     # Utilidades de respuesta
 ├── controllers/
 │   ├── sensors_controller.ts
 │   ├── devices_controller.ts
@@ -282,58 +282,67 @@ backend/src/
     └── mqtt_client.ts
 ```
 
-**Responsibilities**:
-- Expose REST API for CRUD operations
-- Validate and process incoming data
-- Store data in MongoDB
-- Publish MQTT messages for device control
-- Synchronize allowed RFID UIDs to devices
+**Responsabilidades**:
+- Exponer API REST para operaciones CRUD
+- Validar y procesar datos entrantes
+- Almacenar datos en MongoDB
+- Publicar mensajes MQTT para control de dispositivos
+- Sincronizar UIDs RFID permitidos a dispositivos
 
-### Data Layer
+### Capa de Datos
 
 #### MongoDB
 
-**Purpose**: Persistent storage for all application data.
+**Propósito**: Almacenamiento persistente para todos los datos de la aplicación.
 
-**Collections**:
+**Colecciones**:
 
-| Collection | Description |
-|------------|-------------|
-| `sensors` | Time-series sensor readings |
-| `devices` | Current state of controllable devices |
-| `users` | User accounts with RFID associations |
-| `access_logs` | Historical record of access attempts |
-| `alerts` | Security and environmental alerts |
+| Colección | Descripción |
+|-----------|-------------|
+| `sensors` | Lecturas de sensores en series de tiempo |
+| `devices` | Estado actual de dispositivos controlables |
+| `users` | Cuentas de usuario con asociaciones RFID |
+| `access_logs` | Registro histórico de intentos de acceso |
+| `alerts` | Alertas de seguridad y ambientales |
 
-**Relationships**:
-- `access_logs.user_id` → `users._id` (optional reference)
-- All collections have `source` field for device identification
+**Relaciones**:
+- `access_logs.user_id` → `users._id` (referencia opcional)
+- Todas las colecciones tienen campo `source` para identificación de dispositivo
 
-### Frontend Layer
+### Capa Frontend
 
-#### React Application
+#### Aplicación React
 
-**Purpose**: User interface for monitoring and control.
+**Propósito**: Interfaz de usuario para monitoreo y control.
 
-**Structure**:
+**Estructura**:
 ```
 frontend/src/
-├── App.tsx             # Root component
-├── main.tsx            # Entry point
+├── App.tsx             # Componente raíz
+├── main.tsx            # Punto de entrada
 ├── api/
 │   ├── sensorsApi.ts
 │   ├── controlsApi.ts
 │   ├── usersApi.ts
 │   ├── logsApi.ts
 │   └── alertsApi.ts
-├── components/         # Reusable UI components
-├── hooks/              # Custom React hooks
-├── layouts/            # Page layouts
+├── components/
+│   ├── Clock.tsx           # Componente de reloj
+│   ├── ControlPanel.tsx    # Panel de control de dispositivos
+│   ├── ControlSwitch.tsx   # Componente switch genérico
+│   ├── DoorSwitch.tsx      # Switch de control de puerta
+│   ├── LightSwitch.tsx     # Switch de control de luz
+│   ├── ManualSwitch.tsx    # Toggle modo Manual/Auto
+│   └── WindowSwitch.tsx    # Switch de control de ventana
+├── hooks/
+│   └── useFetch.ts         # Hook de obtención de datos
+├── layouts/
+│   └── Layout.tsx          # Wrapper de layout principal
 ├── pages/
-│   ├── Dashboard.tsx   # Sensor overview
-│   ├── Controls.tsx    # Device controls
-│   ├── Access.tsx      # Access logs
-│   └── Events.tsx      # Alerts and events
+│   ├── Dashboard.tsx   # Vista general de sensores
+│   ├── Controls.tsx    # Controles de dispositivos
+│   ├── Access.tsx      # Logs de acceso
+│   └── Events.tsx      # Alertas y eventos
 └── types/
     ├── Sensors.ts
     ├── User.ts
@@ -341,156 +350,109 @@ frontend/src/
     └── Alerts.ts
 ```
 
-**Pages**:
-- **Dashboard**: Real-time sensor data display with charts
-- **Controls**: Manual device control interface
-- **Access**: Access log viewer with user details
-- **Events**: Alert management and history
+**Páginas**:
+- **Dashboard**: Visualización de datos de sensores en tiempo real con gráficos
+- **Controles**: Interfaz de control manual de dispositivos
+- **Acceso**: Visor de logs de acceso con detalles de usuario
+- **Eventos**: Gestión e historial de alertas
 
-## Data Flow Diagrams
+## Diagramas de Flujo de Datos
 
-### Sensor Data Flow
+### Flujo de Datos de Sensores
 
 ```mermaid
 sequenceDiagram
     participant ESP as ESP8266-B
-    participant API as Backend API
+    participant API as API Backend
     participant DB as MongoDB
     participant FE as Frontend
 
-    loop Every 30 seconds
-        ESP->>ESP: Read sensors (DHT11, LDR, PIR)
+    loop Cada 30 segundos
+        ESP->>ESP: Leer sensores (DHT11, LDR, PIR)
         ESP->>API: POST /api/sensors
-        API->>DB: Insert sensor document
-        API-->>ESP: 201 Created
+        API->>DB: Insertar documento sensor
+        API-->>ESP: 201 Creado
     end
 
     FE->>API: GET /api/sensors
-    API->>DB: Query sensors
-    DB-->>API: Sensor documents
-    API-->>FE: JSON response
-    FE->>FE: Update dashboard
+    API->>DB: Consultar sensores
+    DB-->>API: Documentos de sensores
+    API-->>FE: Respuesta JSON
+    FE->>FE: Actualizar dashboard
 ```
 
-### Access Control Flow
+### Flujo de Control de Acceso
 
 ```mermaid
 sequenceDiagram
-    participant Card as RFID Card
+    participant Card as Tarjeta RFID
     participant ESP as ESP8266-A
-    participant MQTT as MQTT Broker
-    participant API as Backend API
+    participant MQTT as Broker MQTT
+    participant API as API Backend
     participant DB as MongoDB
 
-    Card->>ESP: Scan card
-    ESP->>ESP: Read UID
-    ESP->>ESP: Check allowed list
+    Card->>ESP: Escanear tarjeta
+    ESP->>ESP: Leer UID
+    ESP->>ESP: Verificar lista permitidos
     
-    alt UID is allowed
-        ESP->>ESP: Open door servo
+    alt UID está permitido
+        ESP->>ESP: Abrir servo de puerta
         ESP->>API: POST /api/logs (authorized: true)
-        API->>DB: Insert access log
-    else UID not allowed
-        ESP->>ESP: Blink alarm LED
+        API->>DB: Insertar log de acceso
+    else UID no permitido
+        ESP->>ESP: Parpadear LED alarma
         ESP->>API: POST /api/logs (authorized: false)
-        API->>DB: Insert access log
+        API->>DB: Insertar log de acceso
     end
 ```
 
-### Device Control Flow
+### Flujo de Control de Dispositivos
 
 ```mermaid
 sequenceDiagram
-    participant User as User
+    participant User as Usuario
     participant FE as Frontend
-    participant API as Backend API
-    participant MQTT as MQTT Broker
+    participant API as API Backend
+    participant MQTT as Broker MQTT
     participant ESP as ESP8266-B
     participant DB as MongoDB
 
-    User->>FE: Click "Turn on lights"
+    User->>FE: Clic "Encender luces"
     FE->>API: PATCH /api/devices/lights
-    API->>DB: Update device state
-    API->>MQTT: Publish room/control/lights "on"
-    MQTT->>ESP: Deliver message
+    API->>DB: Actualizar estado dispositivo
+    API->>MQTT: Publicar room/control/lights "on"
+    MQTT->>ESP: Entregar mensaje
     ESP->>ESP: digitalWrite(LED_LUZ, HIGH)
     API-->>FE: 200 OK
-    FE->>FE: Update UI
+    FE->>FE: Actualizar UI
 ```
 
-## Security Architecture
+## Consideraciones de Escalabilidad
 
-```
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                           SECURITY BOUNDARIES                                    │
-├─────────────────────────────────────────────────────────────────────────────────┤
-│                                                                                 │
-│   ┌───────────────────────────────────────────────────────────────────────┐    │
-│   │                        INTERNET BOUNDARY                               │    │
-│   │   [Future: TLS/HTTPS, JWT Authentication, Rate Limiting]              │    │
-│   └───────────────────────────────────────────────────────────────────────┘    │
-│                                       │                                         │
-│   ┌───────────────────────────────────┼───────────────────────────────────┐    │
-│   │                         DMZ / APPLICATION ZONE                         │    │
-│   │                                   │                                    │    │
-│   │        ┌──────────────────────────┴──────────────────────────┐        │    │
-│   │        │                   NGINX REVERSE PROXY                │        │    │
-│   │        │              (TLS termination, static files)         │        │    │
-│   │        └──────────────────────────┬──────────────────────────┘        │    │
-│   │                                   │                                    │    │
-│   │        ┌──────────────────────────┴──────────────────────────┐        │    │
-│   │        │                    BACKEND API                       │        │    │
-│   │        │            (Input validation, CORS)                  │        │    │
-│   │        └──────────────────────────┬──────────────────────────┘        │    │
-│   └───────────────────────────────────┼───────────────────────────────────┘    │
-│                                       │                                         │
-│   ┌───────────────────────────────────┼───────────────────────────────────┐    │
-│   │                          DATABASE ZONE                                 │    │
-│   │                                   │                                    │    │
-│   │        ┌──────────────────────────┴──────────────────────────┐        │    │
-│   │        │                     MONGODB                          │        │    │
-│   │        │           (Authentication, network binding)          │        │    │
-│   │        └─────────────────────────────────────────────────────┘        │    │
-│   └───────────────────────────────────────────────────────────────────────┘    │
-│                                                                                 │
-│   ┌───────────────────────────────────────────────────────────────────────┐    │
-│   │                           IOT ZONE (VLAN)                              │    │
-│   │                                                                        │    │
-│   │   ┌─────────────────┐         ┌─────────────────────────────────┐     │    │
-│   │   │   MQTT BROKER   │◄───────►│        ESP8266 DEVICES          │     │    │
-│   │   │ (Auth required) │         │   (WiFi WPA2, local network)    │     │    │
-│   │   └─────────────────┘         └─────────────────────────────────┘     │    │
-│   └───────────────────────────────────────────────────────────────────────┘    │
-│                                                                                 │
-└─────────────────────────────────────────────────────────────────────────────────┘
-```
+### Limitaciones de la Arquitectura Actual
 
-## Scalability Considerations
+1. **Instancia única de MongoDB**: Sin replicación ni sharding
+2. **Instancia única de backend**: Sin balanceo de carga
+3. **Frontend basado en polling**: Sin actualizaciones en tiempo real vía WebSocket
+4. **Configuración de dispositivos hardcodeada**: Limitado a nodos ESP8266 predefinidos
 
-### Current Architecture Limitations
+### Opciones de Escalabilidad Futura
 
-1. **Single MongoDB instance**: No replication or sharding
-2. **Single backend instance**: No load balancing
-3. **Polling-based frontend**: No real-time updates via WebSocket
-4. **Hardcoded device configuration**: Limited to predefined ESP8266 nodes
-
-### Future Scalability Options
-
-1. **Database**: MongoDB replica set for high availability
-2. **Backend**: Multiple API instances behind load balancer
-3. **Real-time**: Add WebSocket or Server-Sent Events for live updates
-4. **Device management**: Dynamic device registration and discovery
-5. **Microservices**: Split into sensor, access, and control services
+1. **Base de datos**: Replica set de MongoDB para alta disponibilidad
+2. **Backend**: Múltiples instancias de API detrás de balanceador de carga
+3. **Tiempo real**: Agregar WebSocket o Server-Sent Events para actualizaciones en vivo
+4. **Gestión de dispositivos**: Registro y descubrimiento dinámico de dispositivos
+5. **Microservicios**: Dividir en servicios de sensores, acceso y control
 
 ---
 
-## Related Documentation
+## Documentación Relacionada
 
-- [Technical Documentation](./TECHNICAL.md) - Detailed technical information
-- [Setup Guide](./SETUP.md) - Development environment setup
-- [API Reference](./API.md) - REST API documentation
-- [Contributing](./CONTRIBUTING.md) - How to contribute
+- [Documentación Técnica](./TECHNICAL.md) - Información técnica detallada
+- [Guía de Configuración](./SETUP.md) - Configuración del entorno de desarrollo
+- [Referencia de API](./API.md) - Documentación de API REST
+- [Contribución](./CONTRIBUTING.md) - Cómo contribuir
 
 ---
 
-*Last updated: December 2024*
+*Última actualización: Diciembre 2024*
