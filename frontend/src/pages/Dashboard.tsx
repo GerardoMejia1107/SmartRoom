@@ -64,28 +64,54 @@ function Dashboard() {
 
     // HANDLERS MEMOIZADOS - Esto previene re-renderizados innecesarios
     const handleDoorChange = useCallback(async (v: boolean) => {
+        // 1. UI instantánea
         setDoorOpen(v);
-        await updateDoor({input: {state: v ? "open" : "closed"}});
-        await getStoredDevicesData({}); // Refrescar después de actualizar
-    }, [updateDoor, getStoredDevicesData]);
+
+        try {
+            // 2. Update rápido al backend
+            await updateDoor({input: {state: v ? "open" : "closed"}});
+        } catch (err) {
+            console.error("Door update failed, reverting...");
+            setDoorOpen(!v); // revertir solo si falla
+        }
+    }, [updateDoor]);
+
 
     const handleWindowChange = useCallback(async (v: boolean) => {
         setWindowOpen(v);
-        await updateWindow({input: {state: v ? "open" : "closed"}});
-        await getStoredDevicesData({}); // Refrescar después de actualizar
-    }, [updateWindow, getStoredDevicesData]);
+
+        try {
+            await updateWindow({input: {state: v ? "open" : "closed"}});
+        } catch {
+            console.error("Window update failed");
+            setWindowOpen(!v);
+        }
+    }, [updateWindow]);
+
 
     const handleLightChange = useCallback(async (v: boolean) => {
         setLightOn(v);
-        await updateLights({input: {on: v}});
-        await getStoredDevicesData({}); // Refrescar después de actualizar
-    }, [updateLights, getStoredDevicesData]);
+
+        try {
+            await updateLights({input: {on: v}});
+        } catch {
+            console.error("Lights update failed");
+            setLightOn(!v);
+        }
+    }, [updateLights]);
+
 
     const handleManualControlChange = useCallback(async (v: boolean) => {
         setManualControlOn(v);
-        await updateManualControl({input: {available: v}});
-        await getStoredDevicesData({}); // Refrescar después de actualizar
-    }, [updateManualControl, getStoredDevicesData]);
+
+        try {
+            await updateManualControl({input: {available: v}});
+        } catch {
+            console.error("Manual control update failed");
+            setManualControlOn(!v);
+        }
+    }, [updateManualControl]);
+
 
     // SENSOR BOXES VISUAL - Memoizado
     const sensors = useMemo(() => [

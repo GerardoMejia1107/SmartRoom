@@ -4,24 +4,27 @@ import Layout from "./layouts/Layout.tsx";
 import Dashboard from "./pages/Dashboard.tsx";
 import Events from "./pages/Events.tsx";
 import Access from "./pages/Access.tsx";
+import {Toaster} from "react-hot-toast";
 
 
 function App() {
 
     return (
 
-        <BrowserRouter>
+        <>
+            <Toaster position={"top-center"}/>
+            <BrowserRouter>
 
-            <Routes>
-                <Route path={"/"} element={<Layout/>}>
-                    <Route index element={<Dashboard/>}/>
-                    <Route path={"access"} element={<Access/>}/>
-                    <Route path={"events"} element={<Events/>}/>
-                </Route>
-            </Routes>
+                <Routes>
+                    <Route path={"/"} element={<Layout/>}>
+                        <Route index element={<Dashboard/>}/>
+                        <Route path={"access"} element={<Access/>}/>
+                        <Route path={"events"} element={<Events/>}/>
+                    </Route>
+                </Routes>
 
 
-        </BrowserRouter>
+            </BrowserRouter></>
 
 
     )

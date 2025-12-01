@@ -3,26 +3,12 @@ import {useEffect, useState} from "react";
 import {
     Thermometer, Lightbulb, DoorOpen, AlertTriangle, SunSnow
 } from "lucide-react";
+import Clock from "../components/Clock.tsx";
 
 export default function Layout() {
-    const [time, setTime] = useState("")
+
     const location = useLocation()
 
-    useEffect(() => {
-        const updateClock = () => {
-            const now = new Date()
-            setTime(
-                now.toLocaleTimeString("en-US", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit"
-                })
-            )
-        }
-        updateClock()
-        const interval = setInterval(updateClock, 1000)
-        return () => clearInterval(interval)
-    }, []);
 
     const navItems = [
         {name: "Dashboards", icon: <Thermometer size={16}/>, path: "/"},
@@ -34,7 +20,8 @@ export default function Layout() {
         <div className="min-h-screen w-full bg-[#13171c] text-white flex flex-col">
 
             {/* HEADER */}
-            <header className="fixed top-0 left-0 z-50 w-full bg-[#1f2530] px-8 py-4 shadow-lg border-b border-[#2b3340]">
+            <header
+                className="fixed top-0 left-0 z-50 w-full bg-[#1f2530] px-8 py-4 shadow-lg border-b border-[#2b3340]">
                 <div className=" flex items-center justify-between">
 
                     {/* LEFT */}
@@ -73,7 +60,8 @@ export default function Layout() {
 
                     {/* CLOCK */}
                     <div className="flex items-center gap-3">
-                        <span className="text-sm text-gray-300 font-mono">{time}</span>
+                        <span className="text-sm text-gray-300 font-mono">{<Clock/>
+                        }</span>
 
                         <div className="p-3 bg-[#2A323E] rounded-xl shadow-inner shadow-black/40">
                             <SunSnow size={18} className="text-yellow-300"/>

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import {useState, useCallback} from "react";
+import toast from "react-hot-toast";
 
 const DEFAULT_FETCH_OPTIONS = {
     headers: {
@@ -21,11 +22,11 @@ export function useFetch<T>(
     const [data, setData] = useState<T | null>(null);
     const [error, setError] = useState<string | null>(null);
 
-    const commonFetch = async ({
-                                   input,
-                                   fetchOptions = {},
-                                   urlParams = ""
-                               }: CommonFetch) => {
+    const commonFetch = useCallback(async ({
+                                               input,
+                                               fetchOptions = {},
+                                               urlParams = ""
+                                           }: CommonFetch) => {
 
         setIsLoading(true);
         setError(null);
@@ -45,15 +46,26 @@ export function useFetch<T>(
 
             const json = await response.json();
             setData(json);
+
+            if (method !== "GET") {
+                toast.success(
+                    method === "POST" ? "Creado exitosamente" :
+                        method === "PUT" ? "Actualizado exitosamente" :
+                            method === "DELETE" ? "Eliminado exitosamente" :
+                                "Operación exitosa"
+                );
+            }
             return json;
 
         } catch (err: any) {
+            const msg = err.message || "Error inesperado";
             setError(err.message || "Unknown fetch error");
+            toast.error(msg);
             throw err;
         } finally {
             setIsLoading(false);
         }
-    };
+    }, [baseUrl, method]); // deps estables
 
-    return { isLoading, data, error, commonFetch };
+    return {isLoading, data, error, commonFetch};
 }
