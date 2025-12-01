@@ -253,7 +253,7 @@ void updateSensorCache()
   {
     lastLdrCheck = now;
 
-    // ★★★ ACTUALIZAR SIEMPRE EL CACHE ★★★
+    // ACTUALIZAR SIEMPRE EL CACHE
     sensorCache.ldrRaw = analogRead(LDR_PIN);
     sensorCache.ldrPct = 100.0f - ((sensorCache.ldrRaw / 1023.0f) * 100.0f);
     sensorCache.lastUpdate = now; // Actualizar timestamp
@@ -383,7 +383,7 @@ void setup()
   sensorCache.ldrRaw = analogRead(LDR_PIN);
   sensorCache.ldrPct = 100.0f - ((sensorCache.ldrRaw / 1023.0f) * 100.0f);
 
-  // ★★★ LECTURA INICIAL DHT11 (CRÍTICO) ★★★
+  //  INICIAL DHT11 (CRÍTICO)
   Serial.println(F("\n[DHT] Esperando inicialización (2s)..."));
   delay(2000); // DHT11 necesita 2s después de encender
 
